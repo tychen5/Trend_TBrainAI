@@ -17,7 +17,7 @@ fid搭配其他attriubute
 ## Method ##
 ### DL ###
 - 對cid、pid進行encoding(不知道是要編碼就好還是要使用one-hot)
-- 將各feature合成np array過DNN
+- 將各feature合成np array過fully-connected
 
 ### DL-CNN ###
 - 因為每筆fid所具有的比數不同，所以可能需要padding，有的差距甚大感覺不太容易
