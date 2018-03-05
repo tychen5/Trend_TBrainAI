@@ -1,5 +1,6 @@
 # Leo #
 hello there~
+已經完成各fid的最初發現時間與最終發現時間的差計算，結果我放在duration.csv
 ## Intro of Me ##
 - 孫媽lab
 
