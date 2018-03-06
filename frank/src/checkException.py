@@ -5,34 +5,10 @@ from utils import *
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--directory', help='root directory', default=os.getcwd())
+    # parser.add_argument('-d', '--directory', help='root directory', default=os.getcwd())
     args = parser.parse_args()
     return args
 
-def getPath(args):
-
-    root_dir = args.directory
-    data_dir = os.path.join(root_dir, 'data')
-    exception_dir = os.path.join(data_dir, 'exception')
-    query_dir = os.path.join(data_dir, 'query_log')
-
-    exception_training_file = os.path.join(exception_dir, 'exception_train.txt')
-    exception_test_file = os.path.join(exception_dir, 'exception_testing.txt')
-
-    training_set_file = os.path.join(data_dir, 'training-set.csv') 
-    testing_set_file = os.path.join(data_dir, 'testing-set.csv')
-
-    path = {
-        'ROOT_DIR': root_dir,
-        'DATA_DIR': data_dir,
-        'EXCEPTION_DIR': exception_dir,
-        'QUERY_DIR': query_dir,
-        'EXCEPTION_TRAINING_FILE': exception_training_file,
-        'EXCEPTION_TESTING_FILE': exception_test_file,
-        'TRAINING_SET_FILE': training_set_file,
-        'TESTING_SET_FILE': testing_set_file
-    }
-    return path
 
 def getException(path):
     excTrainingFileID = np.array(readCSV(path['EXCEPTION_TRAINING_FILE']))[:, 0]
@@ -134,7 +110,7 @@ def checkTestingSet(path, excTestingFileID):
 
 if __name__ == '__main__':
     args = parse_args()
-    path = getPath(args)
+    path = getPath()
     
     excTrainingFileID, excTestingFileID = getException(path)
 
