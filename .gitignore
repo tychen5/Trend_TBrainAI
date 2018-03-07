@@ -1,3 +1,4 @@
 frank/data/*
 leo/query_log/*
 leo/data/*
+**/*.pyc
