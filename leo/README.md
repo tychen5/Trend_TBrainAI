@@ -7,6 +7,8 @@ hello there~
 
 * 各fid所對應到的所有cid加總平均，若沒有出現在testing的則濾除不計入加總平均，若最終的fid仍是NaN則進行所有fid的average padding，結果放在csv/cid_avg_infectedRate.csv
 
+* 先計算全部cid的average，給予僅出現再testing的cid賦值padding。對fid僅考慮有出現在testing的計算cid的加權平均，對最終仍為NaN的賦予fid avg padding值
+
 ## Intro of Me ##
 - 孫媽lab
 
