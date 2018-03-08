@@ -163,7 +163,7 @@ def getTimeFeature(refresh_flag = False):
             # get first 7 hour count in first day
             fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
             print(np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ]))
-            query_dt = np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ])
+            query_dt = np.asarray([datetime.datetime.utcfromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
             
             # get hourly feature
             query_hour = np.asarray([dt.hour for dt in query_dt])
