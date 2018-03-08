@@ -199,13 +199,21 @@ for i in range(len(fids)):
         fid2data[fid]['pid_'+pid+'_ratio'] = 0
     
     
-    fid2data[fid]['prior_cid'] = ''
-    fid2data[fid]['prior_cid_match_count'] = 0
-    fid2data[fid]['prior_cid_match_ratio'] = 0
+    fid2data[fid]['prior1_cid'] = ''
+    fid2data[fid]['prior1_cid_match_count'] = 0
+    fid2data[fid]['prior1_cid_match_ratio'] = 0
     
-    fid2data[fid]['prior_prior_cid'] = ''
-    fid2data[fid]['prior_prior_cid_match_count'] = 0
-    fid2data[fid]['prior_prior_cid_match_ratio'] = 0
+    fid2data[fid]['prior2_cid'] = ''
+    fid2data[fid]['prior2_cid_match_count'] = 0
+    fid2data[fid]['prior2_cid_match_ratio'] = 0
+    
+    fid2data[fid]['prior3_cid'] = ''
+    fid2data[fid]['prior3_cid_match_count'] = 0
+    fid2data[fid]['prior3_cid_match_ratio'] = 0
+    
+    fid2data[fid]['prior4_cid'] = ''
+    fid2data[fid]['prior4_cid_match_count'] = 0
+    fid2data[fid]['prior4_cid_match_ratio'] = 0
     
     
     for month in ['march', 'april', 'may']:
@@ -346,16 +354,23 @@ for date_file in query_files:
             fid2data[fid]['may_qts_list'].append(qts)
             fid2data[fid]['may_count'] += 1
         
-        if cid == fid2data[fid]['prior_cid']:
-            fid2data[fid]['prior_cid_match_count'] += 1
+        if cid == fid2data[fid]['prior1_cid']:
+            fid2data[fid]['prior1_cid_match_count'] += 1
         
-        if cid == fid2data[fid]['prior_prior_cid']:
-            fid2data[fid]['prior_prior_cid_match_count'] += 1
+        if cid == fid2data[fid]['prior2_cid']:
+            fid2data[fid]['prior2_cid_match_count'] += 1
+        
+        if cid == fid2data[fid]['prior3_cid']:
+            fid2data[fid]['prior3_cid_match_count'] += 1
+        
+        if cid == fid2data[fid]['prior4_cid']:
+            fid2data[fid]['prior4_cid_match_count'] += 1
         
         
-        
-        fid2data[fid]['prior_prior_cid'] = fid2data[fid]['prior_cid']
-        fid2data[fid]['prior_cid'] = cid
+        fid2data[fid]['prior4_cid'] = fid2data[fid]['prior3_cid']
+        fid2data[fid]['prior3_cid'] = fid2data[fid]['prior2_cid']
+        fid2data[fid]['prior2_cid'] = fid2data[fid]['prior1_cid']
+        fid2data[fid]['prior1_cid'] = cid
         
             
         
@@ -474,8 +489,10 @@ for fid in fids:
     for pid in pids:
         fid2data[fid]['pid_'+pid+'_ratio'] = fid2data[fid]['pid_'+pid+'_count']/fid2data[fid]['count']
     
-    fid2data[fid]['prior_cid_match_ratio'] = fid2data[fid]['prior_cid_match_count']/fid2data[fid]['count']
-    fid2data[fid]['prior_prior_cid_match_ratio'] = fid2data[fid]['prior_prior_cid_match_count']/fid2data[fid]['count']
+    fid2data[fid]['prior1_cid_match_ratio'] = fid2data[fid]['prior1_cid_match_count']/fid2data[fid]['count']
+    fid2data[fid]['prior2_cid_match_ratio'] = fid2data[fid]['prior2_cid_match_count']/fid2data[fid]['count']
+    fid2data[fid]['prior3_cid_match_ratio'] = fid2data[fid]['prior3_cid_match_count']/fid2data[fid]['count']
+    fid2data[fid]['prior4_cid_match_ratio'] = fid2data[fid]['prior4_cid_match_count']/fid2data[fid]['count']
     
     for month in ['march', 'april', 'may']:
         fid2data[fid][month + '_ratio'] = fid2data[fid][month + '_count']/fid2data[fid]['count']
@@ -604,11 +621,17 @@ for pid in pids:
 for pid in pids:
     data.append('pid_'+pid+'_ratio')
 
-data.append('prior_cid_match_count')
-data.append('prior_cid_match_ratio')
+data.append('prior1_cid_match_count')
+data.append('prior1_cid_match_ratio')
 
-data.append('prior_prior_cid_match_count')
-data.append('prior_prior_cid_match_ratio')
+data.append('prior2_cid_match_count')
+data.append('prior2_cid_match_ratio')
+
+data.append('prior3_cid_match_count')
+data.append('prior3_cid_match_ratio')
+
+data.append('prior4_cid_match_count')
+data.append('prior4_cid_match_ratio')
 
 for month in ['march', 'april', 'may']:
     data.append(month + '_qts_step_mean')
@@ -743,11 +766,17 @@ for fid in fid2data:
         data.append(fid2data[fid]['pid_'+pid+'_ratio'])
         
     
-    data.append(fid2data[fid]['prior_cid_match_count'])
-    data.append(fid2data[fid]['prior_cid_match_ratio'])
+    data.append(fid2data[fid]['prior1_cid_match_count'])
+    data.append(fid2data[fid]['prior1_cid_match_ratio'])
     
-    data.append(fid2data[fid]['prior_prior_cid_match_count'])
-    data.append(fid2data[fid]['prior_prior_cid_match_ratio'])
+    data.append(fid2data[fid]['prior2_cid_match_count'])
+    data.append(fid2data[fid]['prior2_cid_match_ratio'])
+    
+    data.append(fid2data[fid]['prior3_cid_match_count'])
+    data.append(fid2data[fid]['prior3_cid_match_ratio'])
+    
+    data.append(fid2data[fid]['prior4_cid_match_count'])
+    data.append(fid2data[fid]['prior4_cid_match_ratio'])
         
     for month in ['march', 'april', 'may']:
         data.append(fid2data[fid][month + '_qts_step_mean'])
