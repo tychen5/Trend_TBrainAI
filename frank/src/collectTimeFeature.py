@@ -148,8 +148,7 @@ def getTimeFeature(refresh_flag = False):
 
         
 
-        for query_idx, query_file in enumerate(os.listdir(path['QUERY_DIR'])):
-            
+        for query_idx, query_file in enumerate(sorted(os.listdir(path['QUERY_DIR']))):
             print('[ %2d ] processing file: %10s' % (query_idx + 1, query_file))
             query = np.asarray(readCSV(os.path.join(path['QUERY_DIR'], query_file)))
             
@@ -163,7 +162,7 @@ def getTimeFeature(refresh_flag = False):
 
             # get first 7 hour count in first day
             fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
-
+            print(np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ]))
             query_dt = np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ])
             
             # get hourly feature
@@ -178,6 +177,7 @@ def getTimeFeature(refresh_flag = False):
             query_month = np.asarray([dt.month for dt in query_dt])
             monthly_cnt = getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month)
             break
+
         # get ratio of first 7 hour count in first day
         for i in range(7):
             fid_D1['H%d_ratio' % (i + 1)] = np.divide(fid_D1['H%d_cnt' % (i + 1)], fid_cnt)
