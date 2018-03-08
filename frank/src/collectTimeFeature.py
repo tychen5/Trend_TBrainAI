@@ -3,6 +3,9 @@ from utils import *
 import numpy as np
 import datetime
 
+FIRST_K_HOUR = 7
+DAY_IN_SECOND = 3600
+
 path = getPath()
 
 def getColMapping(flag):
@@ -89,6 +92,23 @@ def getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month):
     
     return monthly_cnt
 
+def getTotalCntOfFid(fid_cnt, fid2id, query_fid):
+    for fid in query_fid:
+        fid_cnt[fid2id[fid]] += 1
+    return fid_cnt
+
+def getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp):
+    
+
+    for fid, timestamp in zip(query_fid, query_timestamp):
+        if first_timestamp[fid2id[fid]] == 0:
+            first_timestamp[fid2id[fid]] = int(timestamp)
+        for i in range(FIRST_K_HOUR):
+            if int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND:
+                fid_D1['H%d_cnt' % (i + 1)] += 1
+
+    return fid_D1
+
 def getTimeFeature(refresh_flag = False):
     
     if refresh_flag or not os.path.exists(path['TIME_FEATURE_CSV_FILE']):
@@ -110,11 +130,23 @@ def getTimeFeature(refresh_flag = False):
         else:
             time_feature_matrix = np.zeros((fid_size, feature_size))
         
-        # get time feature
+        # get time count feature
         hourly_cnt = {'H%d_cnt' % (i): np.zeros(fid_size) for i in range(24)}
-        daily_cnt = {'D%d_cnt' % (i): np.zeros(fid_size) for i in range(31)}
+        daily_cnt = {'D%d_cnt' % (i + 1): np.zeros(fid_size) for i in range(31)}
         monthly_cnt = {'M%d_cnt' % (i): np.zeros(fid_size) for i in [3, 4, 5]}
         
+        # get total count of all fid
+        fid_cnt = np.zeros(fid_size)
+
+        # get H1 in D1 of every fid
+        first_timestamp = np.zeros(fid_size)
+        fid_D1 = {'H%d_cnt' % (i + 1): np.zeros(fid_size) for i in range(FIRST_K_HOUR)}
+
+        
+        
+
+        
+
         for query_idx, query_file in enumerate(os.listdir(path['QUERY_DIR'])):
             print('[ %2d ] processing file: %10s' % (query_idx + 1, query_file))
             query = np.asarray(readCSV(os.path.join(path['QUERY_DIR'], query_file)))
@@ -123,6 +155,12 @@ def getTimeFeature(refresh_flag = False):
             query_cid = query[:, 1]
             query_timestamp = query[:, 2]
             query_pid = query[:, 3]
+
+            # get total count of every fid
+            fid_cnt = getTotalCntOfFid(fid_cnt, fid2id, query_fid)
+
+            # get first 7 hour count in first day
+            fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
 
             query_dt = np.asarray([datetime.datetime.fromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
             
@@ -169,8 +207,17 @@ def getTimeFeature(refresh_flag = False):
                 feature_array
             )
 
-        # TODO: add other feature here
+        # add first 7 hour count in first day
+        for feature_name, feature_array in fid_D1.items():
+            time_feature_matrix, feature2id, id2feature = addFeatureToMatrix(
+                time_feature_matrix,
+                feature2id,
+                id2feature,
+                feature_name, feature_array
+            )
 
+        # TODO: add other feature here
+        
 
         # store all the information
         writeCSV(time_feature_matrix, path['TIME_FEATURE_CSV_FILE'])
@@ -178,7 +225,8 @@ def getTimeFeature(refresh_flag = False):
         writePickle(fid2id, path['FID_ID_PKL_FILE'])
         writePickle(id2feature, path['ID_TIME_FEATURE_PKL_FILE'])
         writePickle(feature2id, path['TIME_FEATURE_ID_PKL_FILE'])
-        
+        print(feature2id)
+
     else:    
         # if file exist and not try to re-collect
         # load file
