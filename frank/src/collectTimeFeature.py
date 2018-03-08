@@ -108,8 +108,8 @@ def getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_tim
         if first_timestamp[fid2id[fid]] == 0:
             first_timestamp[fid2id[fid]] = int(timestamp)
         for i in range(FIRST_K_HOUR):
-            if int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND:
-                fid_D1['H%d_cnt' % (i + 1)] += 1
+            if (int(timestamp) - first_timestamp[fid2id[fid]] >= i * DAY_IN_SECOND) and (int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND):
+                fid_D1['D1_H%d_cnt' % (i + 1)] += 1
 
     return fid_D1
 
@@ -144,7 +144,7 @@ def getTimeFeature(refresh_flag = False):
 
         # get H1 in D1 of every fid
         first_timestamp = np.zeros(fid_size)
-        fid_D1 = {'H%d_cnt' % (i + 1): np.zeros(fid_size) for i in range(FIRST_K_HOUR)}
+        fid_D1 = {'D1_H%d_cnt' % (i + 1): np.zeros(fid_size) for i in range(FIRST_K_HOUR)}
 
         
 
@@ -179,12 +179,12 @@ def getTimeFeature(refresh_flag = False):
 
         # get ratio of first 7 hour count in first day
         for i in range(7):
-            fid_D1['H%d_ratio' % (i + 1)] = np.divide(fid_D1['H%d_cnt' % (i + 1)], fid_cnt)
-            fid_D1['H%d_ratio' % (i + 1)][fid_D1['H%d_ratio' % (i + 1)] == np.inf] = 0
+            fid_D1['D1_H%d_ratio' % (i + 1)] = np.divide(fid_D1['D1_H%d_cnt' % (i + 1)], fid_cnt)
+            fid_D1['D1_H%d_ratio' % (i + 1)][fid_D1['D1_H%d_ratio' % (i + 1)] == np.inf] = 0
         # get increase rate of the ratio of first 7 hour count in first day
         for i in range(6):
-            fid_D1['H%d_increase_rate' % (i + 1)] = np.divide(fid_D1['H%d_ratio' % (i + 2)], fid_D1['H%d_ratio' % (i + 1)])
-            fid_D1['H%d_increase_rate' % (i + 1)][fid_D1['H%d_increase_rate' % (i + 1)] == np.inf] = 0
+            fid_D1['D1_H%d_increase_rate' % (i + 1)] = np.divide(fid_D1['D1_H%d_ratio' % (i + 2)], fid_D1['D1_H%d_ratio' % (i + 1)])
+            fid_D1['D1_H%d_increase_rate' % (i + 1)][fid_D1['D1_H%d_increase_rate' % (i + 1)] == np.inf] = 0
 
         # TODO: get other time feature
         
