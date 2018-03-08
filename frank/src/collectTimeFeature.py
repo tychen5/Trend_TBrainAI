@@ -1,7 +1,11 @@
 from utils import *
 
 import numpy as np
-import datetime
+import datetime, time, pytz
+
+# ignore the floating point error result from divided by zero
+old_err_state = np.seterr(divide='raise')
+ignored_states = np.seterr(**old_err_state)
 
 FIRST_K_HOUR = 7
 DAY_IN_SECOND = 3600
@@ -22,7 +26,7 @@ def getColMapping(flag):
         feature2id = {}
         id2feature = {}
 
-    print('total fid size = %d' % (len(feature2id)))
+    print('total time feature size = %d' % (len(feature2id)))
 
     return feature2id, id2feature, len(feature2id)
 
@@ -143,11 +147,9 @@ def getTimeFeature(refresh_flag = False):
         fid_D1 = {'H%d_cnt' % (i + 1): np.zeros(fid_size) for i in range(FIRST_K_HOUR)}
 
         
-        
-
-        
 
         for query_idx, query_file in enumerate(os.listdir(path['QUERY_DIR'])):
+            
             print('[ %2d ] processing file: %10s' % (query_idx + 1, query_file))
             query = np.asarray(readCSV(os.path.join(path['QUERY_DIR'], query_file)))
             
@@ -162,7 +164,7 @@ def getTimeFeature(refresh_flag = False):
             # get first 7 hour count in first day
             fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
 
-            query_dt = np.asarray([datetime.datetime.fromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
+            query_dt = np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ])
             
             # get hourly feature
             query_hour = np.asarray([dt.hour for dt in query_dt])
@@ -175,8 +177,18 @@ def getTimeFeature(refresh_flag = False):
             # get monthly feature
             query_month = np.asarray([dt.month for dt in query_dt])
             monthly_cnt = getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month)
-            
+            break
+        # get ratio of first 7 hour count in first day
+        for i in range(7):
+            fid_D1['H%d_ratio' % (i + 1)] = np.divide(fid_D1['H%d_cnt' % (i + 1)], fid_cnt)
+            fid_D1['H%d_ratio' % (i + 1)][fid_D1['H%d_ratio' % (i + 1)] == np.inf] = 0
+        # get increase rate of the ratio of first 7 hour count in first day
+        for i in range(6):
+            fid_D1['H%d_increase_rate' % (i + 1)] = np.divide(fid_D1['H%d_ratio' % (i + 2)], fid_D1['H%d_ratio' % (i + 1)])
+            fid_D1['H%d_increase_rate' % (i + 1)][fid_D1['H%d_increase_rate' % (i + 1)] == np.inf] = 0
+
         # TODO: get other time feature
+        
 
         # add hourly feature to mat
         for feature_name, feature_array in hourly_cnt.items():
@@ -237,4 +249,8 @@ def getTimeFeature(refresh_flag = False):
     return time_feature_matrix, feature2id, id2feature
         
 if __name__ == '__main__':
+    start_time = datetime.datetime.now()
     time_feature_matrix, feature2id, id2feature = getTimeFeature(True)
+    end_time = datetime.datetime.now()
+    print('Total time spent: ', end='')
+    print(end_time - start_time)
