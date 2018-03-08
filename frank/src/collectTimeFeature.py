@@ -162,7 +162,6 @@ def getTimeFeature(refresh_flag = False):
 
             # get first 7 hour count in first day
             fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
-            print(np.asarray([datetime.datetime.fromtimestamp(int(timestamp)).astimezone(pytz.utc) for timestamp in query_timestamp ]))
             query_dt = np.asarray([datetime.datetime.utcfromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
             
             # get hourly feature
@@ -176,7 +175,7 @@ def getTimeFeature(refresh_flag = False):
             # get monthly feature
             query_month = np.asarray([dt.month for dt in query_dt])
             monthly_cnt = getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month)
-            break
+            # break
 
         # get ratio of first 7 hour count in first day
         for i in range(7):
