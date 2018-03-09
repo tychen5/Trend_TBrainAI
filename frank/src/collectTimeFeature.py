@@ -108,6 +108,9 @@ def getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_tim
     for fid, timestamp in zip(query_fid, query_timestamp):
         if first_timestamp[fid2id[fid]] == 0:
             first_timestamp[fid2id[fid]] = int(timestamp)
+        else:
+            int(timestamp) - first_timestamp[fid2id[fid]] > FIRST_K_HOUR * DAY_IN_SECOND
+            continue
         for i in range(FIRST_K_HOUR):
             if (int(timestamp) - first_timestamp[fid2id[fid]] >= i * DAY_IN_SECOND) and (int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND):
                 fid_D1['D1_H%d_cnt' % (i + 1)][fid2id[fid]] += 1
@@ -151,6 +154,7 @@ def getTimeFeature(refresh_flag = False):
 
         for query_idx, query_file in enumerate(sorted(os.listdir(path['QUERY_DIR']))):
             print('[ %2d ] processing file: %10s' % (query_idx + 1, query_file))
+            # step1_time = time.time()
             query = np.asarray(readCSV(os.path.join(path['QUERY_DIR'], query_file)))
             
             query_fid = query[:, 0]
@@ -160,9 +164,10 @@ def getTimeFeature(refresh_flag = False):
 
             # get total count of every fid
             fid_cnt = getTotalCntOfFid(fid_cnt, fid2id, query_fid)
-
+            # step2_time = time.time()
             # get first 7 hour count in first day
             fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
+            # step3_time = time.time()
             query_dt = np.asarray([datetime.datetime.utcfromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
             
             # get hourly feature
@@ -176,7 +181,13 @@ def getTimeFeature(refresh_flag = False):
             # get monthly feature
             query_month = np.asarray([dt.month for dt in query_dt])
             monthly_cnt = getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month)
-          
+            # step4_time = time.time()
+            # print('\ttotal: ', end=' ')
+            # print(step4_time - step1_time)
+            # print('\tfirst 7 hour: ', end=' ')
+            # print(step3_time - step2_time)
+            # if query_idx == 5:
+                # break
 
         # get ratio of first 7 hour count in first day
         fid_cnt += MIN_NUM
