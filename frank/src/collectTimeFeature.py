@@ -6,6 +6,7 @@ import datetime, time, pytz
 # ignore the floating point error result from divided by zero
 old_err_state = np.seterr(divide='raise')
 ignored_states = np.seterr(**old_err_state)
+MIN_NUM = 2.05623357236e-5
 
 FIRST_K_HOUR = 7
 DAY_IN_SECOND = 3600
@@ -60,7 +61,7 @@ def addFeatureToMatrix(mat, feature2id, id2feature, feature_name, feature_array)
         id2feature[len(id2feature)] = feature_name
     
     if feature2id[feature_name] >= mat.shape[1]:
-        print(feature_array.shape)
+        # print(feature_array.shape)
         mat = np.concatenate((
             mat, 
             feature_array.reshape(feature_array.shape[0], 1)
@@ -109,7 +110,7 @@ def getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_tim
             first_timestamp[fid2id[fid]] = int(timestamp)
         for i in range(FIRST_K_HOUR):
             if (int(timestamp) - first_timestamp[fid2id[fid]] >= i * DAY_IN_SECOND) and (int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND):
-                fid_D1['D1_H%d_cnt' % (i + 1)] += 1
+                fid_D1['D1_H%d_cnt' % (i + 1)][fid2id[fid]] += 1
 
     return fid_D1
 
@@ -175,19 +176,19 @@ def getTimeFeature(refresh_flag = False):
             # get monthly feature
             query_month = np.asarray([dt.month for dt in query_dt])
             monthly_cnt = getMonthlyFeature(monthly_cnt, fid2id, id2fid, query_fid, query_month)
-            # break
+          
 
         # get ratio of first 7 hour count in first day
+        fid_cnt += MIN_NUM
         for i in range(7):
+            # smooth the answer
+            fid_D1['D1_H%d_cnt' % (i + 1)] += MIN_NUM
             fid_D1['D1_H%d_ratio' % (i + 1)] = np.divide(fid_D1['D1_H%d_cnt' % (i + 1)], fid_cnt)
-            fid_D1['D1_H%d_ratio' % (i + 1)][fid_D1['D1_H%d_ratio' % (i + 1)] == np.inf] = 0
         # get increase rate of the ratio of first 7 hour count in first day
         for i in range(6):
-            fid_D1['D1_H%d_increase_rate' % (i + 1)] = np.divide(fid_D1['D1_H%d_ratio' % (i + 2)], fid_D1['D1_H%d_ratio' % (i + 1)])
-            fid_D1['D1_H%d_increase_rate' % (i + 1)][fid_D1['D1_H%d_increase_rate' % (i + 1)] == np.inf] = 0
-
+            fid_D1['D1_H%d_increase_rate' % (i + 1)] = np.divide(fid_D1['D1_H%d_cnt' % (i + 2)], fid_D1['D1_H%d_cnt' % (i + 1)])
+       
         # TODO: get other time feature
-        
 
         # add hourly feature to mat
         for feature_name, feature_array in hourly_cnt.items():
