@@ -9,6 +9,10 @@ hello there~
 
 * csv/cid_padCid_padFid.csv => 先計算全部cid的average，給予僅出現再testing的cid賦值padding。對fid僅考慮有出現在testing的計算cid的加權平均，對最終仍為NaN的賦予fid avg padding值。
 
+* csv/duration_statistic1.csv => 第一種time統計算法:依據百分位25,50,75減掉最小值來做為q1,q2,q3,以及timestep的min,max,std,mean。
+
+* csv/duration_statistic2.csv => 第二種time duration統計算法:依據step來計算同fid中前後time的差，直接統計其q1,q2,3,mean,std,min,max。
+
 ## Intro of Me ##
 - 孫媽lab
 
