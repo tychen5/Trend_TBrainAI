@@ -18,10 +18,27 @@ from sklearn import svm
 stime = time.time()
 
 np.random.seed(4646)
-eps = 10 ** -5
-estimators_num = 600
+eps = 10 ** -8
+estimators_num = 1000
 
 
+
+appear_hour_title = []
+fid2appear_hour_data = {}
+count = 0
+f = open('ryan_time_feature.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        appear_hour_title = line[59:]
+        sorting_idx = sorted(range(len(appear_hour_title)), key=lambda k: appear_hour_title[k])
+        appear_hour_title = list(np.asarray(appear_hour_title)[sorting_idx])
+        continue
+    appear_hour_data = [float(x) for x in line[59:]]
+    appear_hour_data = list(np.asarray(appear_hour_data)[sorting_idx])
+    fid2appear_hour_data[line[0]] = appear_hour_data
+    
+f.close()
 
 hour_title = []
 fid2hour_data = {}
@@ -48,6 +65,7 @@ for line in csv.reader(f):
     fid2h_infec_ratio[line[1]] = float(line[2])
 f.close()
 
+
 fid2pid_infec_ratio = {}
 count = 0
 f = open('june_product_ratio.csv')
@@ -60,15 +78,29 @@ f.close()
 
 
 
-fid2cid_infec_ratio = {}
-count = 0
-f = open('leo_cid_padCid_padFid.csv')
-for line in csv.reader(f):
-    count += 1
-    if count == 1:
-        continue
-    fid2cid_infec_ratio[line[1]] = float(line[2])
-f.close()
+#fid2cid_infec_ratio = {}
+#count = 0
+#f = open('leo_cid_padCid_padFid.csv')
+#for line in csv.reader(f):
+#    count += 1
+#    if count == 1:
+#        continue
+#    
+#    ratio = float(line[2])
+#    
+#    if ratio >= 0 and ratio <= 0.25:
+#        round_ratio = 1
+#    elif ratio > 0.25 and ratio <= 0.50:
+#        round_ratio = 2
+#    elif ratio > 0.50 and ratio <= 0.75:
+#        round_ratio = 3
+#    elif ratio > 0.75 and ratio <= 1:
+#        round_ratio = 4
+#    
+#    
+#    fid2cid_infec_ratio[line[1]] = round_ratio
+#    
+#f.close()
 
 
 #fid2cid_infec_ratio = {}
@@ -166,7 +198,7 @@ f.close()
 
 #############################################################################
 
-
+"""
 
 x = []
 y = []
@@ -174,6 +206,7 @@ y = []
 
 x_test = []
 fid_test = []
+fid_train = []
 
 title = []
 the_selected_title = []
@@ -183,9 +216,12 @@ for line in csv.reader(f):
 #    print(line)
     
     if line[0] == 'fid':
+        
         title = line[1:-2]
         for t in title:
-            if not t.startswith('date') and \
+            
+            if True and \
+            not t.startswith('date') and \
             not t.startswith('pid_0374c4') and \
             not t.startswith('pid_05b409') and \
             not t.startswith('pid_3c2be6') and \
@@ -193,11 +229,14 @@ for line in csv.reader(f):
             not t.startswith('pid_cc3a6a') and \
             not t.startswith('pid_8b7f69') and \
             not t.startswith('appear_day_7') and \
+            not t.startswith('appear_day_6') and \
+            not t.startswith('appear_day_5') and \
+            not t.startswith('appear_day_4') and \
             not t.startswith('march') and \
             not t.startswith('april') and \
             not t.startswith('may') and \
             not (t.startswith('appear_') and t.endswith('_count'))  and \
-            not (t.startswith('appear_') and t.endswith('d/p_ratio'))  and \
+            not (t.startswith('appear_') and t.endswith('d/p_ratio'))and \
             not (t.startswith('H_') and t.endswith('_count')) and \
             not (t.startswith('pid_') and t.endswith('_count')):
                 
@@ -206,20 +245,37 @@ for line in csv.reader(f):
         
         for t in hour_title:
             
-            if not t.endswith('_cnt'):
-#            not t.startswith('H_0_11_') and \
-#            not t.startswith('H_11_23_') and \
-#            not t.startswith('H_0_7_') and \
-#            not t.startswith('H_8_15_') and \
-#            not t.startswith('H_16_23_') and \
-#            not t.startswith('H_0_5_') and \
-#            not t.startswith('H_6_11_') and \
-#            not t.startswith('H_12_17_') and \
-#            not t.startswith('H_18_23_'):
+            if True and \
+            not t.startswith('H_0_11_') and \
+            not t.startswith('H_12_23_') and \
+            not t.startswith('H_0_7_') and \
+            not t.startswith('H_8_15_') and \
+            not t.startswith('H_16_23_') and \
+            not t.startswith('H_0_5_') and \
+            not t.startswith('H_6_11_') and \
+            not t.startswith('H_12_17_') and \
+            not t.startswith('H_18_23_') and \
+            not t.startswith('X12_') and \
+            not t.startswith('X8_') and \
+            not t.startswith('X6_') and \
+            not t.endswith('_cnt'):
             
                 the_selected_title.append(t)
             
 #            the_selected_title.append(t)
+        
+        
+        
+        for t in appear_hour_title:
+            
+            if True and \
+            not t.endswith('cnt') and \
+            not t.endswith('increase_rate') and \
+            not t.startswith('D1_H7') and \
+            not t.startswith('D1_H6') and \
+            not t.startswith('D1_H5') and \
+            not t.startswith('D1_H4'):
+                the_selected_title.append(t)
         
         
         the_selected_title.append('h_infec_ratio')
@@ -230,79 +286,101 @@ for line in csv.reader(f):
         
         
         print(the_selected_title)
+        continue
                 
+    
+    
+    the_fid = line[0]
+    the_data = line[1:-2]
+    the_selected_data = []
+    
+    for i in range(len(the_data)):
+        if title[i] in the_selected_title:
+            the_selected_data.append(float(the_data[i]))
+    
+    
+    
+    the_hour_data = fid2hour_data[the_fid]
+    for i in range(len(the_hour_data)):
+        if hour_title[i] in the_selected_title:
+            the_selected_data.append(float(the_hour_data[i]))
+    
+    
+    the_appear_hour_data = fid2appear_hour_data[the_fid]
+    for i in range(len(the_appear_hour_data)):
+        if appear_hour_title[i] in the_selected_title:
+            the_selected_data.append(float(the_appear_hour_data[i]))
+    
+    
+    the_selected_data.append(fid2h_infec_ratio[the_fid])
+    the_selected_data.append(fid2pid_infec_ratio[the_fid])
+#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
+    the_selected_data.append(fid2duration_long[the_fid])
+    the_selected_data.append(fid2discrete_rate[the_fid])
+    
     
     if line[-1] == 'train':
         
-        the_fid = line[0]
-        the_data = line[1:-2]
-        the_selected_data = []
-        
-        for i in range(len(the_data)):
-            if title[i] in the_selected_title:
-                the_selected_data.append(float(the_data[i]))
-        
-        
-        
-        the_hour_data = fid2hour_data[the_fid]
-        for i in range(len(the_hour_data)):
-            if hour_title[i] in the_selected_title:
-                the_selected_data.append(float(the_hour_data[i]))
-        
-        
-        the_selected_data.append(fid2h_infec_ratio[the_fid])
-        the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
-        the_selected_data.append(fid2duration_long[the_fid])
-        the_selected_data.append(fid2discrete_rate[the_fid])
-        
-        
         x.append(the_selected_data)
         y.append(int(line[-2]))
+        fid_train.append(line[0])
     
     elif line[-1] == 'test':
-        
-        the_fid = line[0]
-        the_data = line[1:-2]
-        the_selected_data = []
-        
-        for i in range(len(the_data)):
-            if title[i] in the_selected_title:
-                the_selected_data.append(float(the_data[i]))
-        
-        
-        
-        the_hour_data = fid2hour_data[the_fid]
-        for i in range(len(the_hour_data)):
-            if hour_title[i] in the_selected_title:
-                the_selected_data.append(float(the_hour_data[i]))
-        
-        
-        the_selected_data.append(fid2h_infec_ratio[the_fid])
-        the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
-        the_selected_data.append(fid2duration_long[the_fid])
-        the_selected_data.append(fid2discrete_rate[the_fid])
-        
-        
-        
-        
         x_test.append(the_selected_data)
         fid_test.append(line[0])
     
     
 f.close()
 
+
+
+
 x = np.asarray(x)
 y = np.asarray(y)
-
 x_test = np.asarray(x_test)
 
 print('x shape', x.shape)
 print('y shape', y.shape)
-
 print('x_test shape', x_test.shape)
 
+#####################################################
+
+train_selected_features = []
+train_answers = []
+
+train_selected_features.append(['fid'] + the_selected_title)
+train_answers.append(['fid', 'ans'])
+
+for i in range(x.shape[0]):
+    feat = [fid_train[i]] + list(x[i,:])
+    train_selected_features.append(feat)
+    answer = [fid_train[i]] + [y[i]]
+    train_answers.append(answer)
+
+f = open('train_selected_features.csv', 'w')
+w = csv.writer(f)
+w.writerows(train_selected_features)
+f.close()
+
+f = open('train_answers.csv', 'w')
+w = csv.writer(f)
+w.writerows(train_answers)
+f.close()
+
+
+
+test_selected_features = []
+
+test_selected_features.append(['fid'] + the_selected_title)
+
+for i in range(x_test.shape[0]):
+    feat = [fid_test[i]] + list(x_test[i,:])
+    test_selected_features.append(feat)
+
+f = open('test_selected_features.csv', 'w')
+w = csv.writer(f)
+w.writerows(test_selected_features)
+f.close()
 
 #sys.exit()
 
@@ -322,6 +400,10 @@ x_train = x_train/np.tile(x_train_std,(len(x_train),1))
 
 x_valid = x_valid - np.tile(x_train_mean,(len(x_valid),1))
 x_valid = x_valid/np.tile(x_train_std,(len(x_valid),1))
+
+
+
+#####################################################
 
 
 #train_pred = np.zeros(len(y_train))
@@ -374,6 +456,72 @@ xgb3 = XGBClassifier(n_estimators = estimators_num,
                     )
 
 
+xgb4 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb5 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb6 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb7 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb8 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb9 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb10 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+
+#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10]
+#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10']
 
 clfs = [xgb1, xgb2, xgb3]
 clf_names = ['XGB1', 'XGB2', 'XGB3']
@@ -439,9 +587,9 @@ fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label
 valid_auc = metrics.auc(fpr, tpr)
 print('Ensemble Valid AUC:', valid_auc)
 
-sys.exit()
+#sys.exit()
 
-
+"""
 
 #############################################################################
 
@@ -453,6 +601,7 @@ y = []
 
 x_test = []
 fid_test = []
+fid_train = []
 
 title = []
 the_selected_title = []
@@ -462,9 +611,12 @@ for line in csv.reader(f):
 #    print(line)
     
     if line[0] == 'fid':
+        
         title = line[1:-2]
         for t in title:
-            if not t.startswith('date') and \
+            
+            if True and \
+            not t.startswith('date') and \
             not t.startswith('pid_0374c4') and \
             not t.startswith('pid_05b409') and \
             not t.startswith('pid_3c2be6') and \
@@ -472,11 +624,14 @@ for line in csv.reader(f):
             not t.startswith('pid_cc3a6a') and \
             not t.startswith('pid_8b7f69') and \
             not t.startswith('appear_day_7') and \
+            not t.startswith('appear_day_6') and \
+            not t.startswith('appear_day_5') and \
+            not t.startswith('appear_day_4') and \
             not t.startswith('march') and \
             not t.startswith('april') and \
             not t.startswith('may') and \
             not (t.startswith('appear_') and t.endswith('_count'))  and \
-            not (t.startswith('appear_') and t.endswith('d/p_ratio'))  and \
+            not (t.startswith('appear_') and t.endswith('d/p_ratio'))and \
             not (t.startswith('H_') and t.endswith('_count')) and \
             not (t.startswith('pid_') and t.endswith('_count')):
                 
@@ -485,22 +640,40 @@ for line in csv.reader(f):
         
         for t in hour_title:
             
-            if not t.endswith('_cnt'):
-#            not t.startswith('H_0_11_') and \
-#            not t.startswith('H_11_23_') and \
-#            not t.startswith('H_0_7_') and \
-#            not t.startswith('H_8_15_') and \
-#            not t.startswith('H_16_23_') and \
-#            not t.startswith('H_0_5_') and \
-#            not t.startswith('H_6_11_') and \
-#            not t.startswith('H_12_17_') and \
-#            not t.startswith('H_18_23_'):
+            if True and \
+            not t.startswith('H_0_11_') and \
+            not t.startswith('H_12_23_') and \
+            not t.startswith('H_0_7_') and \
+            not t.startswith('H_8_15_') and \
+            not t.startswith('H_16_23_') and \
+            not t.startswith('H_0_5_') and \
+            not t.startswith('H_6_11_') and \
+            not t.startswith('H_12_17_') and \
+            not t.startswith('H_18_23_') and \
+            not t.startswith('X12_') and \
+            not t.startswith('X8_') and \
+            not t.startswith('X6_') and \
+            not t.endswith('_cnt'):
             
                 the_selected_title.append(t)
             
 #            the_selected_title.append(t)
         
         
+        
+        for t in appear_hour_title:
+            
+            if True and \
+            not t.endswith('cnt') and \
+            not t.endswith('increase_rate') and \
+            not t.startswith('D1_H7') and \
+            not t.startswith('D1_H6') and \
+            not t.startswith('D1_H5') and \
+            not t.startswith('D1_H4'):
+                the_selected_title.append(t)
+        
+        
+        the_selected_title.append('h_infec_ratio')
         the_selected_title.append('pid_infec_ratio')
 #        the_selected_title.append('cid_infec_ratio')
         the_selected_title.append('duration_long')
@@ -508,67 +681,51 @@ for line in csv.reader(f):
         
         
         print(the_selected_title)
+        continue
                 
+    
+    
+    the_fid = line[0]
+    the_data = line[1:-2]
+    the_selected_data = []
+    
+    for i in range(len(the_data)):
+        if title[i] in the_selected_title:
+            the_selected_data.append(float(the_data[i]))
+    
+    
+    
+    the_hour_data = fid2hour_data[the_fid]
+    for i in range(len(the_hour_data)):
+        if hour_title[i] in the_selected_title:
+            the_selected_data.append(float(the_hour_data[i]))
+    
+    
+    the_appear_hour_data = fid2appear_hour_data[the_fid]
+    for i in range(len(the_appear_hour_data)):
+        if appear_hour_title[i] in the_selected_title:
+            the_selected_data.append(float(the_appear_hour_data[i]))
+    
+    
+    the_selected_data.append(fid2h_infec_ratio[the_fid])
+    the_selected_data.append(fid2pid_infec_ratio[the_fid])
+#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
+    the_selected_data.append(fid2duration_long[the_fid])
+    the_selected_data.append(fid2discrete_rate[the_fid])
+    
     
     if line[-1] == 'train':
         
-        the_fid = line[0]
-        the_data = line[1:-2]
-        the_selected_data = []
-        
-        for i in range(len(the_data)):
-            if title[i] in the_selected_title:
-                the_selected_data.append(float(the_data[i]))
-        
-        
-        
-        the_hour_data = fid2hour_data[the_fid]
-        for i in range(len(the_hour_data)):
-            if hour_title[i] in the_selected_title:
-                the_selected_data.append(float(the_hour_data[i]))
-        
-        
-        the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
-        the_selected_data.append(fid2duration_long[the_fid])
-        the_selected_data.append(fid2discrete_rate[the_fid])
-        
-        
         x.append(the_selected_data)
         y.append(int(line[-2]))
+        fid_train.append(line[0])
     
     elif line[-1] == 'test':
-        
-        the_fid = line[0]
-        the_data = line[1:-2]
-        the_selected_data = []
-        
-        for i in range(len(the_data)):
-            if title[i] in the_selected_title:
-                the_selected_data.append(float(the_data[i]))
-        
-        
-        
-        the_hour_data = fid2hour_data[the_fid]
-        for i in range(len(the_hour_data)):
-            if hour_title[i] in the_selected_title:
-                the_selected_data.append(float(the_hour_data[i]))
-        
-        
-        the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
-        the_selected_data.append(fid2duration_long[the_fid])
-        the_selected_data.append(fid2discrete_rate[the_fid])
-        
-        
-        
-        
         x_test.append(the_selected_data)
         fid_test.append(line[0])
     
     
 f.close()
-
 
 
 
@@ -640,9 +797,75 @@ xgb3 = XGBClassifier(n_estimators = estimators_num,
                     )
 
 
+xgb4 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
 
-clfs = [xgb1, xgb2, xgb3]
-clf_names = ['XGB1', 'XGB2', 'XGB3']
+xgb5 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb6 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb7 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb8 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb9 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+xgb10 = XGBClassifier(n_estimators = estimators_num,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
+                    learning_rate = 0.05,
+                    subsample = 0.6 + 0.4 * np.random.random(),
+                    n_jobs = 4
+                    )
+
+
+#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10]
+#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10']
+
+clfs = [xgb1, xgb2, xgb3, xgb4, xgb5]
+clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5']
 
 train_preds = []
 test_preds = []
