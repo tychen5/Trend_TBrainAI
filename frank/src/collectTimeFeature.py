@@ -104,18 +104,28 @@ def getTotalCntOfFid(fid_cnt, fid2id, query_fid):
 
 def getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp):
     
-
+    
     for fid, timestamp in zip(query_fid, query_timestamp):
+        # print(fid, end=', ')
+        # print(timestamp)
+        # if fid == 'dfccd8e23f0b03ec4db7a9a745ad7399':
+        #     print('get dfccd8e23f0b03ec4db7a9a745ad7399 data')
         if first_timestamp[fid2id[fid]] == 0:
             first_timestamp[fid2id[fid]] = int(timestamp)
+            # if fid == 'dfccd8e23f0b03ec4db7a9a745ad7399':
+            #     print(first_timestamp)
         else:
-            int(timestamp) - first_timestamp[fid2id[fid]] > FIRST_K_HOUR * DAY_IN_SECOND
-            continue
+            # print(first_timestamp[fid2id[fid]])
+            if int(timestamp) - first_timestamp[fid2id[fid]] > FIRST_K_HOUR * DAY_IN_SECOND:
+                continue
         for i in range(FIRST_K_HOUR):
             if (int(timestamp) - first_timestamp[fid2id[fid]] >= i * DAY_IN_SECOND) and (int(timestamp) - first_timestamp[fid2id[fid]] < (i + 1) * DAY_IN_SECOND):
+                # print('D1_H%d_cnt = %d' % (i + 1, fid_D1['D1_H%d_cnt' % (i + 1)][fid2id[fid]]), end=' ')
+                # print(fid2id[fid], end=' ')
                 fid_D1['D1_H%d_cnt' % (i + 1)][fid2id[fid]] += 1
+                # print('D1_H%d_cnt = %d' % (i + 1, fid_D1['D1_H%d_cnt' % (i + 1)][fid2id[fid]]))
 
-    return fid_D1
+    return fid_D1, first_timestamp
 
 def getTimeFeature(refresh_flag = False):
     
@@ -166,7 +176,7 @@ def getTimeFeature(refresh_flag = False):
             fid_cnt = getTotalCntOfFid(fid_cnt, fid2id, query_fid)
             # step2_time = time.time()
             # get first 7 hour count in first day
-            fid_D1 = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
+            fid_D1, first_timestamp = getFirst7HourCntInDay1(fid_D1, first_timestamp, fid2id, query_fid, query_timestamp)
             # step3_time = time.time()
             query_dt = np.asarray([datetime.datetime.utcfromtimestamp(int(timestamp)) for timestamp in query_timestamp ])
             
@@ -187,8 +197,14 @@ def getTimeFeature(refresh_flag = False):
             # print('\tfirst 7 hour: ', end=' ')
             # print(step3_time - step2_time)
             # if query_idx == 5:
-            #     break
+            # break
+        # for i in range(len(first_timestamp)):
+        #     if id2fid[i] == 'dfccd8e23f0b03ec4db7a9a745ad7399':
 
+        #         print(id2fid[i], end=' ')
+        #         print(fid_D1['D1_H1_cnt'][fid2id['dfccd8e23f0b03ec4db7a9a745ad7399']], end='  ')
+        #         print(first_timestamp[i])
+            
         # get ratio of first 7 hour count in first day
         fid_cnt += MIN_NUM
         for i in range(7):
