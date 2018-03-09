@@ -26,6 +26,14 @@ def getPath():
     train_FID_malware_rate = os.path.join(info_csv_dir, 'train_fid_malware_rate')
     test_FID_malware_rate = os.path.join(info_csv_dir, 'test_fid_malware_rate')
     
+    time_feature_csv_file = os.path.join(info_csv_dir, 'time_feature.csv')
+    
+    id_FID_pkl_file = os.path.join(info_pkl_dir, 'id_fid.pkl')
+    FID_id_pkl_file = os.path.join(info_pkl_dir, 'fid_id.pkl')
+    
+    id_time_feature_pkl_file = os.path.join(info_pkl_dir, 'id_time_feature.pkl')
+    time_feature_id_pkl_file = os.path.join(info_pkl_dir, 'time_feature_id.pkl')
+    
     tmp = os.path.join(info_csv_dir, 'tmp.txt')
 
     path = {
@@ -45,7 +53,11 @@ def getPath():
         'TRAIN_FID_MALWARE_RATE': train_FID_malware_rate,
         'TEST_FID_MALWARE_RATE': test_FID_malware_rate,
         'TMP': tmp,
-
+        'TIME_FEATURE_CSV_FILE': time_feature_csv_file,
+        'ID_FID_PKL_FILE': id_FID_pkl_file,
+        'FID_ID_PKL_FILE': FID_id_pkl_file,
+        'ID_TIME_FEATURE_PKL_FILE': id_time_feature_pkl_file,
+        'TIME_FEATURE_ID_PKL_FILE': time_feature_id_pkl_file,
     }
     return path
 
@@ -60,8 +72,8 @@ def readCSV(file):
             data.append(row)
     return data
 
-def writeCSV(file, data):
-    # data is 2d numpy array
+def writeCSV(data, file):
+    # data is 2d array
     with open(file, 'w') as f:
         writer = csv.writer(f, delimiter=',')
         for line in data:
