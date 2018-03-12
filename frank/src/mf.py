@@ -10,7 +10,7 @@ from utils import *
 from collectTimeFeature import getRowMapping
 
 # WORKING_CPU = 5
-FID_CID_RANK = 30
+FID_CID_RANK = 15
 FID_PID_RANK = 5
 MAX_ITER = 200
 
