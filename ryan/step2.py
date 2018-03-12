@@ -19,7 +19,35 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-estimators_num = 1000
+clf_num = 10
+estimators_num = 1200
+
+
+
+fid2duration_long = {}
+fid2discrete_rate = {}
+count = 0
+f = open('leo_duration_discreteRate.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2duration_long[line[1]] = float(line[2])
+    fid2discrete_rate[line[1]] = float(line[3])
+f.close()
+
+
+
+duration_title = ['duration_q1','duration_q2','duration_q3','duration_std']
+fid2duration_data = {}
+count = 0
+f = open('leo_duration_statistic1.csv')
+for line in csv.reader(f):
+    count += 1
+    if count in [1,2,3]:
+        continue
+    fid2duration_data[line[0]] = [float(x) for x in line[1:5]]
+f.close()
 
 
 
@@ -171,20 +199,6 @@ f.close()
 
 
 
-
-fid2duration_long = {}
-fid2discrete_rate = {}
-count = 0
-f = open('leo_duration_discreteRate.csv')
-for line in csv.reader(f):
-    count += 1
-    if count == 1:
-        continue
-    fid2duration_long[line[1]] = float(line[2])
-    fid2discrete_rate[line[1]] = float(line[3])
-f.close()
-
-
 test_fids = []
 f = open('test_fids.txt', 'r')
 for line in f:
@@ -198,7 +212,7 @@ f.close()
 
 #############################################################################
 
-"""
+
 
 x = []
 y = []
@@ -258,6 +272,7 @@ for line in csv.reader(f):
             not t.startswith('X12_') and \
             not t.startswith('X8_') and \
             not t.startswith('X6_') and \
+            not t.startswith('H_') and \
             not t.endswith('_cnt'):
             
                 the_selected_title.append(t)
@@ -275,6 +290,13 @@ for line in csv.reader(f):
             not t.startswith('D1_H6') and \
             not t.startswith('D1_H5') and \
             not t.startswith('D1_H4'):
+                the_selected_title.append(t)
+        
+        
+        
+        for t in duration_title:
+            
+            if True:
                 the_selected_title.append(t)
         
         
@@ -310,6 +332,12 @@ for line in csv.reader(f):
     for i in range(len(the_appear_hour_data)):
         if appear_hour_title[i] in the_selected_title:
             the_selected_data.append(float(the_appear_hour_data[i]))
+    
+        
+    the_duration_data = fid2duration_data[the_fid]
+    for i in range(len(the_duration_data)):
+        if duration_title[i] in the_selected_title:
+            the_selected_data.append(float(the_duration_data[i]))
     
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -391,16 +419,27 @@ x_train, x_valid = x[train_idx,:], x[valid_idx,:]
 y_train, y_valid = y[train_idx], y[valid_idx]
 
 
-x_train_mean = np.mean(x_train, axis=0)
-x_train_std = np.std(x_train, axis=0) + eps
+#x_train_mean = np.mean(x_train, axis=0)
+#x_train_std = np.std(x_train, axis=0) + eps
+#
+#x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
+#x_train = x_train/np.tile(x_train_std,(len(x_train),1))
+#
+#
+#x_valid = x_valid - np.tile(x_train_mean,(len(x_valid),1))
+#x_valid = x_valid/np.tile(x_train_std,(len(x_valid),1))
 
-x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
-x_train = x_train/np.tile(x_train_std,(len(x_train),1))
 
 
-x_valid = x_valid - np.tile(x_train_mean,(len(x_valid),1))
-x_valid = x_valid/np.tile(x_train_std,(len(x_valid),1))
+x_mean = np.mean(x, axis=0)
+x_std = np.std(x, axis=0) + eps
 
+x_train = x_train - np.tile(x_mean,(len(x_train),1))
+x_train = x_train/np.tile(x_std,(len(x_train),1))
+
+
+x_valid = x_valid - np.tile(x_mean,(len(x_valid),1))
+x_valid = x_valid/np.tile(x_std,(len(x_valid),1))
 
 
 #####################################################
@@ -520,11 +559,11 @@ xgb10 = XGBClassifier(n_estimators = estimators_num,
                     )
 
 
-#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10]
-#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10']
+clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10][:clf_num]
+clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10'][:clf_num]
 
-clfs = [xgb1, xgb2, xgb3]
-clf_names = ['XGB1', 'XGB2', 'XGB3']
+#clfs = [xgb1, xgb2, xgb3]
+#clf_names = ['XGB1', 'XGB2', 'XGB3']
 
 train_preds = []
 valid_preds = []
@@ -557,14 +596,12 @@ for i in range(len(clfs)):
 
 
 ensemble_train_pred = None
-
 for train_pred in train_preds:
     if ensemble_train_pred is None:
         ensemble_train_pred = train_pred
     else:
-        ensemble_train_pred = ensemble_train_pred + train_pred
-
-ensemble_train_pred = ensemble_train_pred/len(train_preds)
+        ensemble_train_pred = ensemble_train_pred * train_pred
+ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
 
 fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
 train_auc = metrics.auc(fpr, tpr)
@@ -573,23 +610,44 @@ print('Ensemble Train AUC:', train_auc)
 
 
 ensemble_valid_pred = None
-
 for valid_pred in valid_preds:
     if ensemble_valid_pred is None:
         ensemble_valid_pred = valid_pred
     else:
-        ensemble_valid_pred = ensemble_valid_pred + valid_pred
-
-ensemble_valid_pred = ensemble_valid_pred/len(valid_preds)
-
+        ensemble_valid_pred = ensemble_valid_pred * valid_pred
+ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
 
 fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
 valid_auc = metrics.auc(fpr, tpr)
-print('Ensemble Valid AUC:', valid_auc)
+print('Ensemble1 Valid AUC:', valid_auc)
+
+
+ensemble_valid_pred = np.vstack(valid_preds).mean(axis=0)
+ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
+
+fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
+valid_auc = metrics.auc(fpr, tpr)
+print('Ensemble2 Valid AUC:', valid_auc)
+
+
+ensemble_valid_pred = np.vstack(valid_preds).max(axis=0)
+ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
+
+fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
+valid_auc = metrics.auc(fpr, tpr)
+print('Ensemble3 Valid AUC:', valid_auc)
+
+
+ensemble_valid_pred = np.vstack(valid_preds).min(axis=0)
+ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
+
+fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
+valid_auc = metrics.auc(fpr, tpr)
+print('Ensemble4 Valid AUC:', valid_auc)
 
 #sys.exit()
 
-"""
+
 
 #############################################################################
 
@@ -653,6 +711,7 @@ for line in csv.reader(f):
             not t.startswith('X12_') and \
             not t.startswith('X8_') and \
             not t.startswith('X6_') and \
+            not t.startswith('H_') and \
             not t.endswith('_cnt'):
             
                 the_selected_title.append(t)
@@ -670,6 +729,13 @@ for line in csv.reader(f):
             not t.startswith('D1_H6') and \
             not t.startswith('D1_H5') and \
             not t.startswith('D1_H4'):
+                the_selected_title.append(t)
+        
+        
+        
+        for t in duration_title:
+            
+            if True:
                 the_selected_title.append(t)
         
         
@@ -705,6 +771,12 @@ for line in csv.reader(f):
     for i in range(len(the_appear_hour_data)):
         if appear_hour_title[i] in the_selected_title:
             the_selected_data.append(float(the_appear_hour_data[i]))
+    
+        
+    the_duration_data = fid2duration_data[the_fid]
+    for i in range(len(the_duration_data)):
+        if duration_title[i] in the_selected_title:
+            the_selected_data.append(float(the_duration_data[i]))
     
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -746,16 +818,30 @@ x_train = x
 y_train = y
 x_test = x_test
 
-x_train_mean = np.mean(x_train, axis=0)
-x_train_std = np.std(x_train, axis=0) + eps
 
 
-x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
-x_train = x_train/np.tile(x_train_std,(len(x_train),1))
+
+#x_train_mean = np.mean(x_train, axis=0)
+#x_train_std = np.std(x_train, axis=0) + eps
+#
+#
+#x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
+#x_train = x_train/np.tile(x_train_std,(len(x_train),1))
+#
+#
+#x_test = x_test - np.tile(x_train_mean,(len(x_test),1))
+#x_test = x_test/np.tile(x_train_std,(len(x_test),1))
 
 
-x_test = x_test - np.tile(x_train_mean,(len(x_test),1))
-x_test = x_test/np.tile(x_train_std,(len(x_test),1))
+x_mean = np.mean(x, axis=0)
+x_std = np.std(x, axis=0) + eps
+
+x_train = x_train - np.tile(x_mean,(len(x_train),1))
+x_train = x_train/np.tile(x_std,(len(x_train),1))
+
+x_test = x_test - np.tile(x_mean,(len(x_test),1))
+x_test = x_test/np.tile(x_std,(len(x_test),1))
+
 
 
 
@@ -861,11 +947,11 @@ xgb10 = XGBClassifier(n_estimators = estimators_num,
                     )
 
 
-#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10]
-#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10']
+clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10][:clf_num]
+clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10'][:clf_num]
 
-clfs = [xgb1, xgb2, xgb3, xgb4, xgb5]
-clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5']
+#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5]
+#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5']
 
 train_preds = []
 test_preds = []
@@ -895,30 +981,37 @@ for i in range(len(clfs)):
 
 
 ensemble_train_pred = None
-
 for train_pred in train_preds:
     if ensemble_train_pred is None:
         ensemble_train_pred = train_pred
     else:
-        ensemble_train_pred = ensemble_train_pred + train_pred
-
-ensemble_train_pred = ensemble_train_pred/len(train_preds)
+        ensemble_train_pred = ensemble_train_pred * train_pred
+ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
 
 fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
 train_auc = metrics.auc(fpr, tpr)
 print('Ensemble Train AUC:', train_auc)
 
 
-
 ensemble_test_pred = None
-
 for test_pred in test_preds:
     if ensemble_test_pred is None:
         ensemble_test_pred = test_pred
     else:
-        ensemble_test_pred = ensemble_test_pred + test_pred
+        ensemble_test_pred = ensemble_test_pred * test_pred
+ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
 
-ensemble_test_pred = ensemble_test_pred/len(test_preds)
+
+#ensemble_test_pred = np.vstack(test_preds).mean(axis=0)
+#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
+
+
+#ensemble_test_pred = np.vstack(test_preds).max(axis=0)
+#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
+#
+#
+#ensemble_test_pred = np.vstack(test_preds).min(axis=0)
+#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
     
 
 submit = []
