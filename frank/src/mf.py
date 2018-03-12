@@ -8,6 +8,7 @@ from scipy.sparse import csr_matrix
 from utils import *
 from collectTimeFeature import getRowMapping
 
+WORKING_CPU = 16
 FID_CID_RANK = 10
 FID_PID_RANK = 3
 MAX_ITER = 200
@@ -99,8 +100,8 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         
         # builfing nmf
         print('Building Non-Negative matrix factorization')
-        fid_cid_nmf = nimfa.Nmf(fid_cid_spr_mat, max_iter=MAX_ITER, rank=FID_CID_RANK, update='euclidean', objective='fro')
-        fid_pid_nmf = nimfa.Nmf(fid_pid_spr_mat, max_iter=MAX_ITER, rank=FID_PID_RANK, update='euclidean', objective='fro')
+        fid_cid_nmf = nimfa.Nmf(fid_cid_spr_mat, max_iter=MAX_ITER, rank=FID_CID_RANK, n_run=WORKING_CPU, track_error=True, update='euclidean', objective='fro')
+        fid_pid_nmf = nimfa.Nmf(fid_pid_spr_mat, max_iter=MAX_ITER, rank=FID_PID_RANK, n_run=WORKING_CPU, track_error=True, update='euclidean', objective='fro')
         
         # fitting to the data 
         print('Fitting to the data')
@@ -125,6 +126,8 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         print('H shape: ', end=' ')
         print(fid_pid_H.shape)
 
+        # split the feature to train and test
+        
 
         # writing feature data
         # writeCSV
