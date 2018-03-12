@@ -10,8 +10,8 @@ from utils import *
 from collectTimeFeature import getRowMapping
 
 # WORKING_CPU = 5
-FID_CID_RANK = 50
-FID_PID_RANK = 10
+FID_CID_RANK = 30
+FID_PID_RANK = 5
 MAX_ITER = 200
 
 path = getPath()
@@ -49,6 +49,8 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         # judge if the basis and coef file exists
         if os.path.exists(path['MF_FID_CID_SPR_MAT_PKL_FILE']) and os.path.exists(path['MF_FID_PID_SPR_MAT_PKL_FILE']):
             print('Loading sparse matrix')
+            id2fid = readPickle(path['ID_FID_PKL_FILE'])
+            fid2id = readPickle(path['FID_ID_PKL_FILE'])
             fid_cid_spr_mat = readPickle(path['MF_FID_CID_SPR_MAT_PKL_FILE'])
             fid_pid_spr_mat = readPickle(path['MF_FID_PID_SPR_MAT_PKL_FILE'])
         else:        
@@ -98,6 +100,12 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             print(fid_cid_spr_mat.shape)
             print('Shape of fid_pid_mat: ', end=' ')
             print(fid_pid_spr_mat.shape)
+
+            writePickle(id2fid, path['ID_FID_PKL_FILE'])
+            writePickle(fid2id, path['FID_ID_PKL_FILE'])
+            writePickle(fid_cid_spr_mat, path['MF_FID_CID_SPR_MAT_PKL_FILE'])
+            writePickle(fid_pid_spr_mat, path['MF_FID_PID_SPR_MAT_PKL_FILE'])
+        
         
         # builfing nmf
         print('Building Non-Negative matrix factorization')
@@ -146,8 +154,6 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
 
         # writing feature data
         # writeCSV
-        writePickle(fid_cid_spr_mat, path['MF_FID_CID_SPR_MAT_PKL_FILE'])
-        writePickle(fid_pid_spr_mat, path['MF_FID_PID_SPR_MAT_PKL_FILE'])
         
         writePickle(fid_cid_W, path['MF_FID_CID_BASIS_PKL_FILE'])
         writePickle(fid_cid_H, path['MF_FID_CID_COEF_PKL_FILE'])
