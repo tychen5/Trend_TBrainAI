@@ -55,7 +55,7 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             flag = 0 if os.path.exists(path['ID_FID_PKL_FILE']) else 1        
             fid2id, id2fid, fid_size = getRowMapping(flag)
             # get test fid
-            test_fid = np.asarray(readCSV(path['TESTING_SET_FILE']))
+            test_fid = np.asarray(readCSV(path['TESTING_SET_FILE']))[:, 0]
             for fid in test_fid:
                 if fid not in fid2id:
                     fid2id[fid] = len(fid2id)
