@@ -17,13 +17,13 @@ path = getPath()
 def getPairCnt(mapping, xid2id, id2fid):
     row = []
     col = []
-    cnt = []
+    pair_cnt = []
     for id, fid in id2fid.items():
         for xid, cnt in mapping[fid].items():
             row.append(id)
             col.append(xid2id[xid])
-            cnt.append(cnt)
-    return row, col, cnt
+            pair_cnt.append(cnt)
+    return row, col, pair_cnt
 
 def addToCntMapping(mapping, xid2id, id2xid, query_fid, query_xid):
     # xid means cid or pid in different condition
