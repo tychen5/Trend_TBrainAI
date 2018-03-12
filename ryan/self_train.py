@@ -17,11 +17,12 @@ from sklearn import svm
 
 stime = time.time()
 
-np.random.seed(4646)
+np.random.seed(46)
 eps = 10 ** -8
 clf_num = 10
-estimators_num = 1200
-
+estimators_num = 800
+self_train_thresh = 0.00005
+self_train_time_max = 5
 
 
 fid2duration_long = {}
@@ -68,6 +69,8 @@ for line in csv.reader(f):
     
 f.close()
 
+
+
 hour_title = []
 fid2hour_data = {}
 count = 0
@@ -106,99 +109,6 @@ f.close()
 
 
 
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('leo_cid_padCid_padFid.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    
-#    ratio = float(line[2])
-#    
-#    if ratio >= 0 and ratio <= 0.25:
-#        round_ratio = 1
-#    elif ratio > 0.25 and ratio <= 0.50:
-#        round_ratio = 2
-#    elif ratio > 0.50 and ratio <= 0.75:
-#        round_ratio = 3
-#    elif ratio > 0.75 and ratio <= 1:
-#        round_ratio = 4
-#    
-#    
-#    fid2cid_infec_ratio[line[1]] = round_ratio
-#    
-#f.close()
-
-
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('june_customer_ratio2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2cid_infec_ratio[line[1]] = float(line[2])
-#f.close()
-
-
-
-
-#fid2pid_infec_ratio = {}
-#count = 0
-#f = open('leo_pid_avg_infectedRate2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2pid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('june_customer_ratio.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    if line[2] != 'NA':
-#        fid2cid_infec_ratio[line[1]] = float(line[2])
-#    else:
-#        fid2cid_infec_ratio[line[1]] = float(0)
-#f.close()
-
-
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('leo_cid_avg_infectedRate2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
-
-
-
-
-#fid2cid_infec_ratio = {}
-#f = open('frank_train_fid_malware_rate_cid.csv')
-#for line in csv.reader(f):
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-#
-#f = open('frank_test_fid_malware_rate_cid.csv')
-#for line in csv.reader(f):
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
-
-
-
 test_fids = []
 f = open('test_fids.txt', 'r')
 for line in f:
@@ -213,7 +123,7 @@ f.close()
 #############################################################################
 
 
-
+"""
 x = []
 y = []
 
@@ -419,18 +329,6 @@ x_train, x_valid = x[train_idx,:], x[valid_idx,:]
 y_train, y_valid = y[train_idx], y[valid_idx]
 
 
-#x_train_mean = np.mean(x_train, axis=0)
-#x_train_std = np.std(x_train, axis=0) + eps
-#
-#x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
-#x_train = x_train/np.tile(x_train_std,(len(x_train),1))
-#
-#
-#x_valid = x_valid - np.tile(x_train_mean,(len(x_valid),1))
-#x_valid = x_valid/np.tile(x_train_std,(len(x_valid),1))
-
-
-
 x_mean = np.mean(x, axis=0)
 x_std = np.std(x, axis=0) + eps
 
@@ -445,18 +343,6 @@ x_valid = x_valid/np.tile(x_std,(len(x_valid),1))
 #####################################################
 
 
-#train_pred = np.zeros(len(y_train))
-#fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
-#train_auc = metrics.auc(fpr, tpr)
-#print('ALL-ZERO Train AUC:', train_auc)
-#
-#valid_pred = np.zeros(len(y_valid))
-#fpr, tpr, thresholds = metrics.roc_curve(y_valid, valid_pred, pos_label=1)
-#valid_auc = metrics.auc(fpr, tpr)
-#print('ALL-ZERO Valid AUC:', valid_auc)
-
-
-
 print('Model Building...')
 
 #rf = RandomForestClassifier(n_estimators = estimators_num,
@@ -468,29 +354,29 @@ print('Model Building...')
 #                           n_jobs = 4)
 
 xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.8,
-                    colsample_bytree = 0.8,
-                    max_depth = 15,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.7,
-                    colsample_bytree = 0.7,
-                    max_depth = 18,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6,
-                    colsample_bytree = 0.6,
-                    max_depth = 20,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
@@ -565,94 +451,99 @@ clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XG
 #clfs = [xgb1, xgb2, xgb3]
 #clf_names = ['XGB1', 'XGB2', 'XGB3']
 
-train_preds = []
-valid_preds = []
 
-for i in range(len(clfs)):
-    
-    clf = clfs[i]
-    clf_name = clf_names[i]
-    
-    clf.fit(x_train, y_train)
-    
-    train_pred = clf.predict_proba(x_train)[:,1]
 
-    fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
-    train_auc = metrics.auc(fpr, tpr)
-    print(clf_name, 'Train AUC:', train_auc)
+x_add = np.asarray([])
+y_add = np.asarray([])
+
+pre_idx_add = np.asarray([])
+
+
+self_train_time = 0
+
+while(1):
     
-    valid_pred = clf.predict_proba(x_valid)[:,1]
+    self_train_time += 1
     
-    fpr, tpr, thresholds = metrics.roc_curve(y_valid, valid_pred, pos_label=1)
+    if self_train_time > self_train_time_max:
+        break
+    
+    train_preds = []
+    valid_preds = []
+    
+    for i in range(len(clfs)):
+        
+        clf = clfs[i]
+        clf_name = clf_names[i]
+        
+        if self_train_time == 1:
+            clf.fit(x_train, y_train)
+        else:
+            clf.fit(np.concatenate([x_train, x_add]), np.concatenate([y_train, y_add]))
+        
+        train_pred = clf.predict_proba(x_train)[:,1]
+    
+        fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
+        train_auc = metrics.auc(fpr, tpr)
+        print(clf_name, 'Train AUC:', train_auc)
+        
+        valid_pred = clf.predict_proba(x_valid)[:,1]
+        
+        fpr, tpr, thresholds = metrics.roc_curve(y_valid, valid_pred, pos_label=1)
+        valid_auc = metrics.auc(fpr, tpr)
+        print(clf_name, 'Valid AUC:', valid_auc)
+        
+        train_preds.append(train_pred)
+        valid_preds.append(valid_pred)
+        
+        print('Time Taken:', time.time()-stime)
+        print('\n')
+    
+    
+    
+    ensemble_valid_pred = np.vstack(valid_preds).mean(axis=0)
+    ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
+    
+    fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
     valid_auc = metrics.auc(fpr, tpr)
-    print(clf_name, 'Valid AUC:', valid_auc)
+    print('Ensemble Valid AUC:', valid_auc)
     
-    train_preds.append(train_pred)
-    valid_preds.append(valid_pred)
     
-    print('Time Taken:', time.time()-stime)
-    print('\n')
-
-
-
-ensemble_train_pred = None
-for train_pred in train_preds:
-    if ensemble_train_pred is None:
-        ensemble_train_pred = train_pred
-    else:
-        ensemble_train_pred = ensemble_train_pred * train_pred
-ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
-train_auc = metrics.auc(fpr, tpr)
-print('Ensemble Train AUC:', train_auc)
-
-
-
-ensemble_valid_pred = None
-for valid_pred in valid_preds:
-    if ensemble_valid_pred is None:
-        ensemble_valid_pred = valid_pred
-    else:
-        ensemble_valid_pred = ensemble_valid_pred * valid_pred
-ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
-valid_auc = metrics.auc(fpr, tpr)
-print('Ensemble1 Valid AUC:', valid_auc)
-
-
-ensemble_valid_pred = np.vstack(valid_preds).mean(axis=0)
-ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
-valid_auc = metrics.auc(fpr, tpr)
-print('Ensemble2 Valid AUC:', valid_auc)
-
-
-ensemble_valid_pred = np.vstack(valid_preds).max(axis=0)
-ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
-valid_auc = metrics.auc(fpr, tpr)
-print('Ensemble3 Valid AUC:', valid_auc)
-
-
-ensemble_valid_pred = np.vstack(valid_preds).min(axis=0)
-ensemble_valid_pred = ensemble_valid_pred/np.max(ensemble_valid_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_valid, ensemble_valid_pred, pos_label=1)
-valid_auc = metrics.auc(fpr, tpr)
-print('Ensemble4 Valid AUC:', valid_auc)
+    x_add = []
+    y_add = []
+    idx_add = []
+    
+    thresh_up = 1 - self_train_thresh
+    thresh_down = self_train_thresh
+    
+    for i in range(len(ensemble_valid_pred)):
+        if ensemble_valid_pred[i] >= thresh_up or ensemble_valid_pred[i] <= thresh_down:
+            x_add.append(x_valid[i])
+            y_add.append(round(ensemble_valid_pred[i]))
+            idx_add.append(i)
+    
+    x_add = np.asarray(x_add)
+    y_add = np.asarray(y_add)
+    idx_add = np.asarray(idx_add)
+    
+    print('x add shape', x_add.shape)
+    print('y add shape', y_add.shape)
+    
+    if np.array_equal(idx_add, pre_idx_add):
+        break
+    
+    pre_idx_add = idx_add
+    
+    print('\n\n')
+        
 
 #sys.exit()
 
 
+"""
 
 #############################################################################
-
-
-
+    
 x = []
 y = []
 
@@ -801,17 +692,14 @@ f.close()
 
 
 
+
 x = np.asarray(x)
 y = np.asarray(y)
-
 x_test = np.asarray(x_test)
 
 print('x shape', x.shape)
 print('y shape', y.shape)
-
 print('x_test shape', x_test.shape)
-
-
 
 
 x_train = x
@@ -847,6 +735,7 @@ x_test = x_test/np.tile(x_std,(len(x_test),1))
 
 print('Model Building...')
 
+
 #rf = RandomForestClassifier(n_estimators = estimators_num,
 #                            max_features = 0.5,
 #                            n_jobs = 4)
@@ -856,29 +745,29 @@ print('Model Building...')
 #                           n_jobs = 4)
 
 xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.8,
-                    colsample_bytree = 0.8,
-                    max_depth = 15,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.7,
-                    colsample_bytree = 0.7,
-                    max_depth = 18,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6,
-                    colsample_bytree = 0.6,
-                    max_depth = 20,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
@@ -950,69 +839,90 @@ xgb10 = XGBClassifier(n_estimators = estimators_num,
 clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10][:clf_num]
 clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10'][:clf_num]
 
-#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5]
-#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5']
+#clfs = [xgb1, xgb2, xgb3]
+#clf_names = ['XGB1', 'XGB2', 'XGB3']
 
-train_preds = []
-test_preds = []
 
-for i in range(len(clfs)):
+
+x_add = np.asarray([])
+y_add = np.asarray([])
+
+pre_idx_add = np.asarray([])
+
+
+self_train_time = 0
+
+while(1):
     
-    clf = clfs[i]
-    clf_name = clf_names[i]
+    self_train_time += 1
     
-    clf.fit(x_train, y_train)
+    if self_train_time > self_train_time_max:
+        break
     
-    train_pred = clf.predict_proba(x_train)[:,1]
-
-    fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
-    train_auc = metrics.auc(fpr, tpr)
-    print(clf_name, 'Train AUC:', train_auc)
+    train_preds = []
+    test_preds = []
     
-    test_pred = clf.predict_proba(x_test)[:,1]
+    for i in range(len(clfs)):
+        
+        clf = clfs[i]
+        clf_name = clf_names[i]
+        
+        if self_train_time == 1:
+            clf.fit(x_train, y_train)
+        else:
+            clf.fit(np.concatenate([x_train, x_add]), np.concatenate([y_train, y_add]))
+        
+        train_pred = clf.predict_proba(x_train)[:,1]
     
-    train_preds.append(train_pred)
-    test_preds.append(test_pred)
+        fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
+        train_auc = metrics.auc(fpr, tpr)
+        print(clf_name, 'Train AUC:', train_auc)
+        
+        test_pred = clf.predict_proba(x_test)[:,1]
+        
+        
+        train_preds.append(train_pred)
+        test_preds.append(test_pred)
+        
+        print('Time Taken:', time.time()-stime)
+        print('\n')
     
-    print('Time Taken:', time.time()-stime)
-    print('\n')
-
-
-
-
-ensemble_train_pred = None
-for train_pred in train_preds:
-    if ensemble_train_pred is None:
-        ensemble_train_pred = train_pred
-    else:
-        ensemble_train_pred = ensemble_train_pred * train_pred
-ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
-
-fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
-train_auc = metrics.auc(fpr, tpr)
-print('Ensemble Train AUC:', train_auc)
-
-
-ensemble_test_pred = None
-for test_pred in test_preds:
-    if ensemble_test_pred is None:
-        ensemble_test_pred = test_pred
-    else:
-        ensemble_test_pred = ensemble_test_pred * test_pred
-ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-
-
-#ensemble_test_pred = np.vstack(test_preds).mean(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-
-
-#ensemble_test_pred = np.vstack(test_preds).max(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-#
-#
-#ensemble_test_pred = np.vstack(test_preds).min(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
     
+    
+    ensemble_test_pred = np.vstack(test_preds).mean(axis=0)
+    ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
+    
+    
+    x_add = []
+    y_add = []
+    idx_add = []
+    
+    thresh_up = 1 - self_train_thresh
+    thresh_down = self_train_thresh
+      
+    for i in range(len(ensemble_test_pred)):
+        if ensemble_test_pred[i] >= thresh_up or ensemble_test_pred[i] <= thresh_down:
+            x_add.append(x_test[i])
+            y_add.append(round(ensemble_test_pred[i]))
+            idx_add.append(i)
+    
+    x_add = np.asarray(x_add)
+    y_add = np.asarray(y_add)
+    idx_add = np.asarray(idx_add)
+    
+    print('x add shape', x_add.shape)
+    print('y add shape', y_add.shape)
+    
+    if np.array_equal(idx_add, pre_idx_add):
+        break
+    
+    pre_idx_add = idx_add
+    
+    print('\n\n')
+
+
+
+
 
 submit = []
 for i in range(len(ensemble_test_pred)):
