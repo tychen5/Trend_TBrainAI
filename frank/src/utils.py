@@ -34,6 +34,15 @@ def getPath():
     id_time_feature_pkl_file = os.path.join(info_pkl_dir, 'id_time_feature.pkl')
     time_feature_id_pkl_file = os.path.join(info_pkl_dir, 'time_feature_id.pkl')
     
+    mf_feature_csv_file = os.path.join(info_csv_dir, 'mf_feature.csv')
+    mf_fid_cid_spr_mat_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_cid_spr_mat.pkl')
+    mf_fid_pid_spr_mat_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_pid_spr_mat.pkl')
+    
+    mf_fid_cid_basis_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_cid_basis.pkl')
+    mf_fid_cid_coef_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_cid_coef.pkl')
+    mf_fid_pid_basis_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_pid_basis.pkl')
+    mf_fid_pid_coef_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_pid_coef.pkl')
+    
     tmp = os.path.join(info_csv_dir, 'tmp.txt')
 
     path = {
@@ -58,6 +67,13 @@ def getPath():
         'FID_ID_PKL_FILE': FID_id_pkl_file,
         'ID_TIME_FEATURE_PKL_FILE': id_time_feature_pkl_file,
         'TIME_FEATURE_ID_PKL_FILE': time_feature_id_pkl_file,
+        'MF_FEATURE_CSV_FILE': mf_feature_csv_file,
+        'MF_FID_CID_SPR_MAT_PKL_FILE': mf_fid_cid_spr_mat_pkl_file,
+        'MF_FID_PID_SPR_MAT_PKL_FILE': mf_fid_pid_spr_mat_pkl_file,
+        'MF_FID_CID_BASIS_PKL_FILE': mf_fid_cid_basis_pkl_file,
+        'MF_FID_CID_COEF_PKL_FILE': mf_fid_cid_coef_pkl_file,
+        'MF_FID_PID_BASIS_PKL_FILE': mf_fid_pid_basis_pkl_file,
+        'MF_FID_PID_COEF_PKL_FILE': mf_fid_pid_coef_pkl_file,
     }
     return path
 
