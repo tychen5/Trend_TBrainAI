@@ -12,6 +12,8 @@ FID_CID_RANK = 10
 FID_PID_RANK = 3
 MAX_ITER = 200
 
+path = getPath()
+
 def getPairCnt(mapping, xid2id, id2fid):
     row = []
     col = []
