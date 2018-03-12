@@ -51,6 +51,7 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             fid_pid_spr_mat = readPickle(path['MF_FID_PID_SPR_MAT_PKL_FILE'])
         else:        
             print('Building sparse matrix')
+            flag = 0 if os.path.exists(path['ID_FID_PKL_FILE']) else 1        
             fid2id, id2fid, fid_size = getRowMapping(flag)
             
             # cid
