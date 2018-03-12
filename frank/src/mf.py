@@ -53,7 +53,14 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             print('Building sparse matrix')
             flag = 0 if os.path.exists(path['ID_FID_PKL_FILE']) else 1        
             fid2id, id2fid, fid_size = getRowMapping(flag)
-            
+            # get test fid
+            test_fid = np.asarray(readCSV(path['TESTING_SET_FILE']))
+            for fid in test_fid:
+                if fid not in fid2id:
+                    fid2id[fid] = len(fid2id)
+                    id2fid[len(id2fid)] = fid
+            fid_size = len(fid2id)
+
             # cid
             fid_cid_cnt_mapping = {fid: {} for fid in fid2id}
             cid2id = {}
