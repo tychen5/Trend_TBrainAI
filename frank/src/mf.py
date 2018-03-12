@@ -19,7 +19,7 @@ def getPairCnt(mapping, xid2id, id2fid):
     col = []
     cnt = []
     for id, fid in id2fid.items():
-        for xid, cnt in mapping[fid]:
+        for xid, cnt in mapping[fid].items():
             row.append(id)
             col.append(xid2id[xid])
             cnt.append(cnt)
