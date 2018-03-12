@@ -12,7 +12,7 @@ from collectTimeFeature import getRowMapping
 # WORKING_CPU = 5
 FID_CID_RANK = 10
 FID_PID_RANK = 3
-MAX_ITER = 10
+MAX_ITER = 50
 
 path = getPath()
 
@@ -103,8 +103,8 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         print('Building Non-Negative matrix factorization')
         # fid_cid_nmf = nimfa.Nmf(fid_cid_spr_mat, max_iter=MAX_ITER, rank=FID_CID_RANK, track_error=True, update='euclidean', objective='fro')
         # fid_pid_nmf = nimfa.Nmf(fid_pid_spr_mat, max_iter=MAX_ITER, rank=FID_PID_RANK, track_error=True, update='euclidean', objective='fro')
-        fid_cid_nmf_mdl = NMF(n_components=FID_CID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
-        fid_pid_nmf_mdl = NMF(n_components=FID_PID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
+        fid_cid_nmf_mdl = NMF(init='nndsvd', n_components=FID_CID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
+        fid_pid_nmf_mdl = NMF(init='nndsvd', n_components=FID_PID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
         
         # fitting to the data 
         print('Fitting to the data')
