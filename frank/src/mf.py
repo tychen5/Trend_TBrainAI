@@ -78,7 +78,7 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             
             # get csr_matrix source array
             print('Getting array for building csr_matrix')
-            # row_fid_cid, col_cid, fid_cid_pair_cnt = getPairCnt(fid_cid_cnt_mapping, cid2id, id2fid)
+            row_fid_cid, col_cid, fid_cid_pair_cnt = getPairCnt(fid_cid_cnt_mapping, cid2id, id2fid)
             row_fid_pid, col_pid, fid_pid_pair_cnt = getPairCnt(fid_pid_cnt_mapping, pid2id, id2fid)
 
             # build csr_matrix
@@ -138,7 +138,7 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         cid_feat = fid_cid_W
         pid_feat = fid_pid_W
 
-    return cid_feat, pid_feature
+    return cid_feat, pid_feat
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
