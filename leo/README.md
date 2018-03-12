@@ -13,6 +13,12 @@ hello there~
 
 * csv/duration_statistic2.csv => 第二種time duration統計算法:依據step來計算同fid中前後time的差，直接統計其q1,q2,3,mean,std,min,max。
 
+* csv/MF_cid30.csv => 存放frank的mf_fid_cid_basis.pkl對照回fid的csv格式檔案
+
+* csv/MF_cid15.csv => 上述15維度的fid對照cid之MF的csv格式
+
+* csv/MF_pid5.csv => mf_fid_pid_basis.pkl轉換成csv可train格式
+
 ## Intro of Me ##
 - 孫媽lab
 
@@ -20,3 +26,7 @@ hello there~
 - 網路資安lab: malware analysis、5G IoT technology
 - know a little of DL
 - new to ML
+
+
+## Doing ##
+- DNN + softmax -> binary classification / regression
