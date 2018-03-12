@@ -3,6 +3,7 @@ import nimfa
 import scipy
 import numpy as np
 
+from sklearn.decomposition import NMF
 from scipy.sparse import csr_matrix
 
 from utils import *
@@ -11,7 +12,7 @@ from collectTimeFeature import getRowMapping
 # WORKING_CPU = 5
 FID_CID_RANK = 10
 FID_PID_RANK = 3
-MAX_ITER = 2
+MAX_ITER = 10
 
 path = getPath()
 
@@ -100,18 +101,24 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         
         # builfing nmf
         print('Building Non-Negative matrix factorization')
-        fid_cid_nmf = nimfa.Nmf(fid_cid_spr_mat, max_iter=MAX_ITER, rank=FID_CID_RANK, track_error=True, update='euclidean', objective='fro')
-        fid_pid_nmf = nimfa.Nmf(fid_pid_spr_mat, max_iter=MAX_ITER, rank=FID_PID_RANK, track_error=True, update='euclidean', objective='fro')
+        # fid_cid_nmf = nimfa.Nmf(fid_cid_spr_mat, max_iter=MAX_ITER, rank=FID_CID_RANK, track_error=True, update='euclidean', objective='fro')
+        # fid_pid_nmf = nimfa.Nmf(fid_pid_spr_mat, max_iter=MAX_ITER, rank=FID_PID_RANK, track_error=True, update='euclidean', objective='fro')
+        fid_cid_nmf_mdl = NMF(n_components=FID_CID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
+        fid_pid_nmf_mdl = NMF(n_components=FID_PID_RANK, init='random', random_state=0, max_iter=MAX_ITER, verbose=True )
         
         # fitting to the data 
         print('Fitting to the data')
-        fid_cid_nmf_fit = fid_cid_nmf()
-        fid_pid_nmf_fit = fid_pid_nmf()
+        # fid_cid_nmf_fit = fid_cid_nmf()
+        # fid_pid_nmf_fit = fid_pid_nmf()
+        
         
         # getting fid and cid W and H
         print('Getting fid and cid W and H')
-        fid_cid_W = fid_cid_nmf_fit.basis()
-        fid_cid_H = fid_cid_nmf_fit.coef()
+        # fid_cid_W = fid_cid_nmf_fit.basis()
+        # fid_cid_H = fid_cid_nmf_fit.coef()
+        fid_cid_W = fid_cid_nmf_mdl.fit_transform(fid_cid_spr_mat)
+        fid_cid_H = fid_cid_nmf_mdl.components_
+
         print('W shape: ', end=' ')
         print(fid_cid_W.shape)
         print('H shape: ', end=' ')
@@ -119,8 +126,11 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
 
         # getting fid and Pid W and H
         print('Getting fid and pid W and H')
-        fid_pid_W = fid_pid_nmf_fit.basis()
-        fid_pid_H = fid_cid_nmf_fit.coef()
+        # fid_pid_W = fid_pid_nmf_fit.basis()
+        # fid_pid_H = fid_cid_nmf_fit.coef()
+        fid_pid_W = fid_pid_nmf_mdl.fit_transform(fid_pid_spr_mat)
+        fid_pid_H = fid_pid_nmf_mdl.components_
+
         print('W shape: ', end=' ')
         print(fid_pid_W.shape)
         print('H shape: ', end=' ')
