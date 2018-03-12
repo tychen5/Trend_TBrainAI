@@ -12,7 +12,7 @@ from collectTimeFeature import getRowMapping
 # WORKING_CPU = 5
 FID_CID_RANK = 10
 FID_PID_RANK = 3
-MAX_ITER = 50
+MAX_ITER = 200
 
 path = getPath()
 
