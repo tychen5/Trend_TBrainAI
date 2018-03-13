@@ -20,8 +20,55 @@ stime = time.time()
 np.random.seed(4646)
 eps = 10 ** -8
 clf_num = 10
-estimators_num = 1200
+estimators_num = 800
 
+
+
+
+mf_pid_5_title = []
+for i in range(1,6):
+    mf_pid_5_title.append('mf_pid_5_' + str(i))
+
+fid2mf_pid_5 = {}
+count = 0
+f = open('frank_MF_pid5.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_pid_5[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+mf_cid_30_title = []
+for i in range(1,31):
+    mf_cid_30_title.append('mf_cid_30_' + str(i))
+    
+fid2mf_cid_30 = {}
+count = 0
+f = open('frank_MF_cid30.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_30[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+mf_cid_15_title = []
+for i in range(1,16):
+    mf_cid_15_title.append('mf_cid_15_' + str(i))
+
+fid2mf_cid_15 = {}
+count = 0
+f = open('frank_MF_cid15.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_15[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
 fid2duration_long = {}
@@ -131,71 +178,6 @@ f.close()
 #f.close()
 
 
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('june_customer_ratio2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2cid_infec_ratio[line[1]] = float(line[2])
-#f.close()
-
-
-
-
-#fid2pid_infec_ratio = {}
-#count = 0
-#f = open('leo_pid_avg_infectedRate2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2pid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('june_customer_ratio.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    if line[2] != 'NA':
-#        fid2cid_infec_ratio[line[1]] = float(line[2])
-#    else:
-#        fid2cid_infec_ratio[line[1]] = float(0)
-#f.close()
-
-
-#fid2cid_infec_ratio = {}
-#count = 0
-#f = open('leo_cid_avg_infectedRate2.csv')
-#for line in csv.reader(f):
-#    count += 1
-#    if count == 1:
-#        continue
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
-
-
-
-
-#fid2cid_infec_ratio = {}
-#f = open('frank_train_fid_malware_rate_cid.csv')
-#for line in csv.reader(f):
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-#
-#f = open('frank_test_fid_malware_rate_cid.csv')
-#for line in csv.reader(f):
-#    fid2cid_infec_ratio[line[0]] = float(line[1])
-#f.close()
-
-
 
 
 
@@ -300,6 +282,29 @@ for line in csv.reader(f):
                 the_selected_title.append(t)
         
         
+        
+        
+        for t in mf_cid_30_title:
+            
+            if True and \
+            t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
+                      'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
+                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']:
+                the_selected_title.append(t)
+                
+        
+        for t in mf_cid_15_title:
+            
+            if False:
+                the_selected_title.append(t)
+        
+        
+        for t in mf_pid_5_title:
+            
+            if False:
+                the_selected_title.append(t)
+        
+        
         the_selected_title.append('h_infec_ratio')
         the_selected_title.append('pid_infec_ratio')
 #        the_selected_title.append('cid_infec_ratio')
@@ -338,6 +343,24 @@ for line in csv.reader(f):
     for i in range(len(the_duration_data)):
         if duration_title[i] in the_selected_title:
             the_selected_data.append(float(the_duration_data[i]))
+            
+    
+    the_mf_cid_30_data = fid2mf_cid_30[the_fid]
+    for i in range(len(the_mf_cid_30_data)):
+        if mf_cid_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_30_data[i]))
+    
+    
+    the_mf_cid_15_data = fid2mf_cid_15[the_fid]
+    for i in range(len(the_mf_cid_15_data)):
+        if mf_cid_15_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_15_data[i]))
+    
+    
+    the_mf_pid_5_data = fid2mf_pid_5[the_fid]
+    for i in range(len(the_mf_pid_5_data)):
+        if mf_pid_5_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_5_data[i]))
     
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -445,16 +468,6 @@ x_valid = x_valid/np.tile(x_std,(len(x_valid),1))
 #####################################################
 
 
-#train_pred = np.zeros(len(y_train))
-#fpr, tpr, thresholds = metrics.roc_curve(y_train, train_pred, pos_label=1)
-#train_auc = metrics.auc(fpr, tpr)
-#print('ALL-ZERO Train AUC:', train_auc)
-#
-#valid_pred = np.zeros(len(y_valid))
-#fpr, tpr, thresholds = metrics.roc_curve(y_valid, valid_pred, pos_label=1)
-#valid_auc = metrics.auc(fpr, tpr)
-#print('ALL-ZERO Valid AUC:', valid_auc)
-
 
 
 print('Model Building...')
@@ -468,29 +481,30 @@ print('Model Building...')
 #                           n_jobs = 4)
 
 xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.8,
-                    colsample_bytree = 0.8,
-                    max_depth = 15,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
+
 xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.7,
-                    colsample_bytree = 0.7,
-                    max_depth = 18,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6,
-                    colsample_bytree = 0.6,
-                    max_depth = 20,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
@@ -664,6 +678,8 @@ fid_train = []
 title = []
 the_selected_title = []
 
+
+
 f = open('output.csv')
 for line in csv.reader(f):
 #    print(line)
@@ -739,6 +755,29 @@ for line in csv.reader(f):
                 the_selected_title.append(t)
         
         
+        
+        
+        for t in mf_cid_30_title:
+            
+            if True and \
+            t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
+                      'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
+                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']:
+                the_selected_title.append(t)
+                
+        
+        for t in mf_cid_15_title:
+            
+            if False:
+                the_selected_title.append(t)
+        
+        
+        for t in mf_pid_5_title:
+            
+            if False:
+                the_selected_title.append(t)
+        
+        
         the_selected_title.append('h_infec_ratio')
         the_selected_title.append('pid_infec_ratio')
 #        the_selected_title.append('cid_infec_ratio')
@@ -777,6 +816,24 @@ for line in csv.reader(f):
     for i in range(len(the_duration_data)):
         if duration_title[i] in the_selected_title:
             the_selected_data.append(float(the_duration_data[i]))
+            
+    
+    the_mf_cid_30_data = fid2mf_cid_30[the_fid]
+    for i in range(len(the_mf_cid_30_data)):
+        if mf_cid_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_30_data[i]))
+    
+    
+    the_mf_cid_15_data = fid2mf_cid_15[the_fid]
+    for i in range(len(the_mf_cid_15_data)):
+        if mf_cid_15_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_15_data[i]))
+    
+    
+    the_mf_pid_5_data = fid2mf_pid_5[the_fid]
+    for i in range(len(the_mf_pid_5_data)):
+        if mf_pid_5_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_5_data[i]))
     
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -856,32 +913,31 @@ print('Model Building...')
 #                           n_jobs = 4)
 
 xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.8,
-                    colsample_bytree = 0.8,
-                    max_depth = 15,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.7,
-                    colsample_bytree = 0.7,
-                    max_depth = 18,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
 
 xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6,
-                    colsample_bytree = 0.6,
-                    max_depth = 20,
+                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
+                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
+                    max_depth = 15 + int(10 * np.random.random()),
                     learning_rate = 0.05,
-                    subsample = 0.9,
+                    subsample = 0.6 + 0.4 * np.random.random(),
                     n_jobs = 4
                     )
-
 
 xgb4 = XGBClassifier(n_estimators = estimators_num,
                     colsample_bylevel = 0.6 + 0.4 * np.random.random(),
