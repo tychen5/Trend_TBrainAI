@@ -155,10 +155,10 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         # writing feature data
         # writeCSV
         
-        writePickle(fid_cid_W, str(FID_CID_RANK) + '_' + path['MF_FID_CID_BASIS_PKL_FILE'])
-        writePickle(fid_cid_H, str(FID_CID_RANK) + '_' + path['MF_FID_CID_COEF_PKL_FILE'])
-        writePickle(fid_pid_W, str(FID_PID_RANK) + '_' + path['MF_FID_PID_BASIS_PKL_FILE'])
-        writePickle(fid_pid_H, str(FID_PID_RANK) + '_' + path['MF_FID_PID_COEF_PKL_FILE'])
+        writePickle(fid_cid_W, path['MF_FID_CID_BASIS_PKL_FILE'] + '.' + str(FID_CID_RANK))
+        writePickle(fid_cid_H, path['MF_FID_CID_COEF_PKL_FILE'] + '.' + str(FID_CID_RANK))
+        writePickle(fid_pid_W, path['MF_FID_PID_BASIS_PKL_FILE'] + '.' + str(FID_PID_RANK))
+        writePickle(fid_pid_H, path['MF_FID_PID_COEF_PKL_FILE'] + '.' + str(FID_PID_RANK))
         
         cid_feat = fid_cid_W
         pid_feat = fid_pid_W
