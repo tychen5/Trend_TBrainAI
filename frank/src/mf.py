@@ -10,8 +10,8 @@ from utils import *
 from collectTimeFeature import getRowMapping
 
 # WORKING_CPU = 5
-FID_CID_RANK = 15
-FID_PID_RANK = 5
+FID_CID_RANK = 50
+FID_PID_RANK = 10
 MAX_ITER = 200
 
 path = getPath()
@@ -155,10 +155,10 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         # writing feature data
         # writeCSV
         
-        writePickle(fid_cid_W, path['MF_FID_CID_BASIS_PKL_FILE'])
-        writePickle(fid_cid_H, path['MF_FID_CID_COEF_PKL_FILE'])
-        writePickle(fid_pid_W, path['MF_FID_PID_BASIS_PKL_FILE'])
-        writePickle(fid_pid_H, path['MF_FID_PID_COEF_PKL_FILE'])
+        writePickle(fid_cid_W, str(FID_CID_RANK) + '_' + path['MF_FID_CID_BASIS_PKL_FILE'])
+        writePickle(fid_cid_H, str(FID_CID_RANK) + '_' + path['MF_FID_CID_COEF_PKL_FILE'])
+        writePickle(fid_pid_W, str(FID_PID_RANK) + '_' + path['MF_FID_PID_BASIS_PKL_FILE'])
+        writePickle(fid_pid_H, str(FID_PID_RANK) + '_' + path['MF_FID_PID_COEF_PKL_FILE'])
         
         cid_feat = fid_cid_W
         pid_feat = fid_pid_W
