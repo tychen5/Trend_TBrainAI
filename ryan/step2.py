@@ -20,9 +20,35 @@ stime = time.time()
 np.random.seed(4646)
 eps = 10 ** -8
 clf_num = 10
-estimators_num = 800
+estimators_num = 600
 
 
+
+fid2new_pid_infec_ratio = {}
+
+count = 0
+f = open('june_product_ratio_mean_new.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2new_pid_infec_ratio[line[0]] = float(line[1])
+f.close()
+
+
+mf_pid_10_title = []
+for i in range(1,11):
+    mf_pid_10_title.append('mf_pid_10_' + str(i))
+
+fid2mf_pid_10 = {}
+count = 0
+f = open('frank_MF_pid10.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_pid_10[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
 mf_pid_5_title = []
@@ -38,6 +64,22 @@ for line in csv.reader(f):
         continue
     fid2mf_pid_5[line[0]] = [float(x) for x in line[1:]]
 f.close()
+
+
+mf_cid_50_title = []
+for i in range(1,51):
+    mf_cid_50_title.append('mf_cid_50_' + str(i))
+    
+fid2mf_cid_50 = {}
+count = 0
+f = open('frank_MF_cid50.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_50[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
 
 
 mf_cid_30_title = []
@@ -181,12 +223,6 @@ f.close()
 
 
 
-test_fids = []
-f = open('test_fids.txt', 'r')
-for line in f:
-    fid = line.replace('\n','')
-    test_fids.append(fid)
-f.close()
 
 
 #sys.exit()
@@ -194,7 +230,7 @@ f.close()
 
 #############################################################################
 
-
+"""
 
 x = []
 y = []
@@ -234,7 +270,9 @@ for line in csv.reader(f):
             not (t.startswith('appear_') and t.endswith('_count'))  and \
             not (t.startswith('appear_') and t.endswith('d/p_ratio'))and \
             not (t.startswith('H_') and t.endswith('_count')) and \
-            not (t.startswith('pid_') and t.endswith('_count')):
+            not (t.startswith('pid_') and t.endswith('_count')) and \
+            not t in ['pid_0cdb7a_ratio', 'pid_218578_ratio', 'pid_75f310_ratio', 'pid_8452da_ratio', 'pid_fec24f_ratio',
+                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']:
                 
                 the_selected_title.append(t)
         
@@ -283,6 +321,15 @@ for line in csv.reader(f):
         
         
         
+        for t in mf_cid_50_title:
+            
+            if False and \
+            t not in ['mf_cid_50_10','mf_cid_50_11','mf_cid_50_12','mf_cid_50_13','mf_cid_50_18', \
+                      'mf_cid_50_20','mf_cid_50_23','mf_cid_50_24','mf_cid_50_25','mf_cid_50_28', \
+                      'mf_cid_50_29','mf_cid_50_33','mf_cid_50_35','mf_cid_50_39','mf_cid_50_44', \
+                      'mf_cid_50_6','mf_cid_50_9']:
+                the_selected_title.append(t)
+        
         
         for t in mf_cid_30_title:
             
@@ -295,14 +342,24 @@ for line in csv.reader(f):
         
         for t in mf_cid_15_title:
             
-            if False:
+            if False and \
+            t not in ['mf_cid_15_10','mf_cid_15_11','mf_cid_15_12','mf_cid_15_13', 'mf_cid_15_6']:
                 the_selected_title.append(t)
         
+        
+        
+        for t in mf_pid_10_title:
+            
+            if True:
+                the_selected_title.append(t)
         
         for t in mf_pid_5_title:
             
             if False:
                 the_selected_title.append(t)
+                
+                
+                
         
         
         the_selected_title.append('h_infec_ratio')
@@ -310,6 +367,8 @@ for line in csv.reader(f):
 #        the_selected_title.append('cid_infec_ratio')
         the_selected_title.append('duration_long')
         the_selected_title.append('discrete_rate')
+        
+        the_selected_title.append('new_pid_infec_ratio')
         
         
         print(the_selected_title)
@@ -323,7 +382,10 @@ for line in csv.reader(f):
     
     for i in range(len(the_data)):
         if title[i] in the_selected_title:
-            the_selected_data.append(float(the_data[i]))
+            if 'count' in title[i]:
+                the_selected_data.append(np.log(float(the_data[i]) + eps))
+            else:
+                the_selected_data.append(float(the_data[i]))
     
     
     
@@ -343,7 +405,11 @@ for line in csv.reader(f):
     for i in range(len(the_duration_data)):
         if duration_title[i] in the_selected_title:
             the_selected_data.append(float(the_duration_data[i]))
-            
+    
+    the_mf_cid_50_data = fid2mf_cid_50[the_fid]
+    for i in range(len(the_mf_cid_50_data)):
+        if mf_cid_50_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_50_data[i]))
     
     the_mf_cid_30_data = fid2mf_cid_30[the_fid]
     for i in range(len(the_mf_cid_30_data)):
@@ -357,17 +423,26 @@ for line in csv.reader(f):
             the_selected_data.append(float(the_mf_cid_15_data[i]))
     
     
+    the_mf_pid_10_data = fid2mf_pid_10[the_fid]
+    for i in range(len(the_mf_pid_10_data)):
+        if mf_pid_10_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_10_data[i]))
+    
+    
     the_mf_pid_5_data = fid2mf_pid_5[the_fid]
     for i in range(len(the_mf_pid_5_data)):
         if mf_pid_5_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_pid_5_data[i]))
-    
+            
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
     the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
+#    the_selected_data.append(fid2cid_infec_ratio[the_fid])
     the_selected_data.append(fid2duration_long[the_fid])
     the_selected_data.append(fid2discrete_rate[the_fid])
+    
+    
+    the_selected_data.append(fid2new_pid_infec_ratio[the_fid])
     
     
     if line[-1] == 'train':
@@ -662,7 +737,7 @@ print('Ensemble4 Valid AUC:', valid_auc)
 #sys.exit()
 
 
-
+"""
 #############################################################################
 
 
@@ -677,8 +752,6 @@ fid_train = []
 
 title = []
 the_selected_title = []
-
-
 
 f = open('output.csv')
 for line in csv.reader(f):
@@ -707,7 +780,9 @@ for line in csv.reader(f):
             not (t.startswith('appear_') and t.endswith('_count'))  and \
             not (t.startswith('appear_') and t.endswith('d/p_ratio'))and \
             not (t.startswith('H_') and t.endswith('_count')) and \
-            not (t.startswith('pid_') and t.endswith('_count')):
+            not (t.startswith('pid_') and t.endswith('_count')) and \
+            not t in ['pid_0cdb7a_ratio', 'pid_218578_ratio', 'pid_75f310_ratio', 'pid_8452da_ratio', 'pid_fec24f_ratio',
+                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']:
                 
                 the_selected_title.append(t)
         
@@ -756,6 +831,15 @@ for line in csv.reader(f):
         
         
         
+        for t in mf_cid_50_title:
+            
+            if False and \
+            t not in ['mf_cid_50_10','mf_cid_50_11','mf_cid_50_12','mf_cid_50_13','mf_cid_50_18', \
+                      'mf_cid_50_20','mf_cid_50_23','mf_cid_50_24','mf_cid_50_25','mf_cid_50_28', \
+                      'mf_cid_50_29','mf_cid_50_33','mf_cid_50_35','mf_cid_50_39','mf_cid_50_44', \
+                      'mf_cid_50_6','mf_cid_50_9']:
+                the_selected_title.append(t)
+        
         
         for t in mf_cid_30_title:
             
@@ -768,14 +852,24 @@ for line in csv.reader(f):
         
         for t in mf_cid_15_title:
             
-            if False:
+            if False and \
+            t not in ['mf_cid_15_10','mf_cid_15_11','mf_cid_15_12','mf_cid_15_13', 'mf_cid_15_6']:
                 the_selected_title.append(t)
         
+        
+        
+        for t in mf_pid_10_title:
+            
+            if True:
+                the_selected_title.append(t)
         
         for t in mf_pid_5_title:
             
             if False:
                 the_selected_title.append(t)
+                
+                
+                
         
         
         the_selected_title.append('h_infec_ratio')
@@ -783,6 +877,8 @@ for line in csv.reader(f):
 #        the_selected_title.append('cid_infec_ratio')
         the_selected_title.append('duration_long')
         the_selected_title.append('discrete_rate')
+        
+        the_selected_title.append('new_pid_infec_ratio')
         
         
         print(the_selected_title)
@@ -796,7 +892,10 @@ for line in csv.reader(f):
     
     for i in range(len(the_data)):
         if title[i] in the_selected_title:
-            the_selected_data.append(float(the_data[i]))
+            if 'count' in title[i]:
+                the_selected_data.append(np.log(float(the_data[i]) + eps))
+            else:
+                the_selected_data.append(float(the_data[i]))
     
     
     
@@ -816,7 +915,11 @@ for line in csv.reader(f):
     for i in range(len(the_duration_data)):
         if duration_title[i] in the_selected_title:
             the_selected_data.append(float(the_duration_data[i]))
-            
+    
+    the_mf_cid_50_data = fid2mf_cid_50[the_fid]
+    for i in range(len(the_mf_cid_50_data)):
+        if mf_cid_50_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_50_data[i]))
     
     the_mf_cid_30_data = fid2mf_cid_30[the_fid]
     for i in range(len(the_mf_cid_30_data)):
@@ -830,17 +933,26 @@ for line in csv.reader(f):
             the_selected_data.append(float(the_mf_cid_15_data[i]))
     
     
+    the_mf_pid_10_data = fid2mf_pid_10[the_fid]
+    for i in range(len(the_mf_pid_10_data)):
+        if mf_pid_10_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_10_data[i]))
+    
+    
     the_mf_pid_5_data = fid2mf_pid_5[the_fid]
     for i in range(len(the_mf_pid_5_data)):
         if mf_pid_5_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_pid_5_data[i]))
-    
+            
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
     the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#        the_selected_data.append(fid2cid_infec_ratio[the_fid])
+#    the_selected_data.append(fid2cid_infec_ratio[the_fid])
     the_selected_data.append(fid2duration_long[the_fid])
     the_selected_data.append(fid2discrete_rate[the_fid])
+    
+    
+    the_selected_data.append(fid2new_pid_infec_ratio[the_fid])
     
     
     if line[-1] == 'train':
@@ -855,6 +967,7 @@ for line in csv.reader(f):
     
     
 f.close()
+
 
 
 
