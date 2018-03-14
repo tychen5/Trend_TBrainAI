@@ -19,6 +19,10 @@ hello there~
 
 * csv/MF_pid5.csv => mf_fid_pid_basis.pkl轉換成csv可train格式
 
+* csv/MF_pid10.csv => mf_fid_pid_basis.pkl.10
+
+* csv/MF_cid50.csv => mf_fid_cid_basis.pkl.50
+
 ## Intro of Me ##
 - 孫媽lab
 
