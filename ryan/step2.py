@@ -14,13 +14,29 @@ from sklearn.ensemble import ExtraTreesClassifier
 from xgboost.sklearn import XGBClassifier
 from sklearn import metrics
 from sklearn import svm
+from sklearn.metrics import confusion_matrix
 
 stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-clf_num = 10
+best_ratio = 0.2
+clf_num = 60
 estimators_num = 600
+
+
+fid2new_cid_infec_ratio = {}
+a = []
+
+count = 0
+f = open('june_customer_ratio_mean_new.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2new_cid_infec_ratio[line[0]] = float(line[1])
+    a.append(float(line[1]))
+f.close()
 
 
 
@@ -230,8 +246,6 @@ f.close()
 
 #############################################################################
 
-"""
-
 x = []
 y = []
 
@@ -243,6 +257,8 @@ fid_train = []
 title = []
 the_selected_title = []
 
+take_all = False
+
 f = open('output.csv')
 for line in csv.reader(f):
 #    print(line)
@@ -252,7 +268,8 @@ for line in csv.reader(f):
         title = line[1:-2]
         for t in title:
             
-            if True and \
+            if take_all or \
+            (True and \
             not t.startswith('date') and \
             not t.startswith('pid_0374c4') and \
             not t.startswith('pid_05b409') and \
@@ -272,14 +289,15 @@ for line in csv.reader(f):
             not (t.startswith('H_') and t.endswith('_count')) and \
             not (t.startswith('pid_') and t.endswith('_count')) and \
             not t in ['pid_0cdb7a_ratio', 'pid_218578_ratio', 'pid_75f310_ratio', 'pid_8452da_ratio', 'pid_fec24f_ratio',
-                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']:
-                
+                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']
+            ):
                 the_selected_title.append(t)
         
         
         for t in hour_title:
             
-            if True and \
+            if take_all or \
+            (True and \
             not t.startswith('H_0_11_') and \
             not t.startswith('H_12_23_') and \
             not t.startswith('H_0_7_') and \
@@ -293,69 +311,79 @@ for line in csv.reader(f):
             not t.startswith('X8_') and \
             not t.startswith('X6_') and \
             not t.startswith('H_') and \
-            not t.endswith('_cnt'):
+            not t.endswith('_cnt')
+            ):
             
                 the_selected_title.append(t)
-            
-#            the_selected_title.append(t)
         
         
         
         for t in appear_hour_title:
             
-            if True and \
+            if take_all or \
+            (True and \
             not t.endswith('cnt') and \
             not t.endswith('increase_rate') and \
             not t.startswith('D1_H7') and \
             not t.startswith('D1_H6') and \
             not t.startswith('D1_H5') and \
-            not t.startswith('D1_H4'):
+            not t.startswith('D1_H4')
+            ):
                 the_selected_title.append(t)
         
         
         
         for t in duration_title:
             
-            if True:
+            if take_all or \
+            (True):
                 the_selected_title.append(t)
         
         
         
         for t in mf_cid_50_title:
             
-            if False and \
+            if take_all or \
+            (False and \
             t not in ['mf_cid_50_10','mf_cid_50_11','mf_cid_50_12','mf_cid_50_13','mf_cid_50_18', \
                       'mf_cid_50_20','mf_cid_50_23','mf_cid_50_24','mf_cid_50_25','mf_cid_50_28', \
                       'mf_cid_50_29','mf_cid_50_33','mf_cid_50_35','mf_cid_50_39','mf_cid_50_44', \
-                      'mf_cid_50_6','mf_cid_50_9']:
+                      'mf_cid_50_6','mf_cid_50_9']
+            ):
                 the_selected_title.append(t)
         
         
         for t in mf_cid_30_title:
             
-            if True and \
+            if take_all or \
+            (True and \
             t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
                       'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
-                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']:
+                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']
+            ):
                 the_selected_title.append(t)
                 
         
         for t in mf_cid_15_title:
             
-            if False and \
-            t not in ['mf_cid_15_10','mf_cid_15_11','mf_cid_15_12','mf_cid_15_13', 'mf_cid_15_6']:
+            if take_all or \
+            (False and \
+            t not in ['mf_cid_15_10','mf_cid_15_11','mf_cid_15_12','mf_cid_15_13', 'mf_cid_15_6']
+            ):
                 the_selected_title.append(t)
         
         
         
         for t in mf_pid_10_title:
             
-            if True:
+            if take_all or \
+            (True):
                 the_selected_title.append(t)
         
         for t in mf_pid_5_title:
             
-            if False:
+            if take_all or \
+            (False):
                 the_selected_title.append(t)
                 
                 
@@ -369,6 +397,7 @@ for line in csv.reader(f):
         the_selected_title.append('discrete_rate')
         
         the_selected_title.append('new_pid_infec_ratio')
+#        the_selected_title.append('new_cid_infec_ratio')
         
         
         print(the_selected_title)
@@ -443,6 +472,7 @@ for line in csv.reader(f):
     
     
     the_selected_data.append(fid2new_pid_infec_ratio[the_fid])
+#    the_selected_data.append(fid2new_cid_infec_ratio[the_fid])
     
     
     if line[-1] == 'train':
@@ -450,7 +480,8 @@ for line in csv.reader(f):
         x.append(the_selected_data)
         y.append(int(line[-2]))
         fid_train.append(line[0])
-    
+                
+        
     elif line[-1] == 'test':
         x_test.append(the_selected_data)
         fid_test.append(line[0])
@@ -469,7 +500,9 @@ print('x shape', x.shape)
 print('y shape', y.shape)
 print('x_test shape', x_test.shape)
 
-#####################################################
+#############################################################################
+print('Output Selected Features...')
+#############################################################################
 
 train_selected_features = []
 train_answers = []
@@ -510,23 +543,20 @@ f.close()
 
 #sys.exit()
 
+
+#############################################################################
+print('\n')
+print('<Validating>')
+#############################################################################
+
+
+
+
 train_valid_ratio = 0.9
 indices = np.random.permutation(x.shape[0])
 train_idx, valid_idx = indices[:int(x.shape[0] * train_valid_ratio)], indices[int(x.shape[0] * train_valid_ratio):]
 x_train, x_valid = x[train_idx,:], x[valid_idx,:]
 y_train, y_valid = y[train_idx], y[valid_idx]
-
-
-#x_train_mean = np.mean(x_train, axis=0)
-#x_train_std = np.std(x_train, axis=0) + eps
-#
-#x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
-#x_train = x_train/np.tile(x_train_std,(len(x_train),1))
-#
-#
-#x_valid = x_valid - np.tile(x_train_mean,(len(x_valid),1))
-#x_valid = x_valid/np.tile(x_train_std,(len(x_valid),1))
-
 
 
 x_mean = np.mean(x, axis=0)
@@ -540,6 +570,24 @@ x_valid = x_valid - np.tile(x_mean,(len(x_valid),1))
 x_valid = x_valid/np.tile(x_std,(len(x_valid),1))
 
 
+#x_train_add = []
+#y_train_add = []
+#for i in range(len(y_train)):
+#    if y_train[i] == 1:
+#        for j in range(9 - 1):
+#            x_train_add.append(x_train[i,:])
+#            y_train_add.append(y_train[i])
+#
+#x_train_add = np.asarray(x_train_add)
+#y_train_add = np.asarray(y_train_add)         
+#
+#x_train = np.vstack([x_train, x_train_add])
+#y_train = np.append(y_train, y_train_add)
+
+
+print('x_train shape', x_train.shape)
+print('y_train shape', y_train.shape)
+
 #####################################################
 
 
@@ -547,120 +595,47 @@ x_valid = x_valid/np.tile(x_std,(len(x_valid),1))
 
 print('Model Building...')
 
-#rf = RandomForestClassifier(n_estimators = estimators_num,
-#                            max_features = 0.5,
-#                            n_jobs = 4)
-#
-#ext = ExtraTreesClassifier(n_estimators = estimators_num,
-#                           max_features = 0.5,
-#                           n_jobs = 4)
 
-xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
+clfs = []
+clf_names = []
+clf_params = []
 
-
-xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
+for i in range(clf_num):
+    
+    param = {
+            'n_estimators': estimators_num,
+            'colsample_bylevel': 0.6 + 0.4 * np.random.random(),
+            'colsample_bytree': 0.6 + 0.4 * np.random.random(),
+            'max_depth': 15 + int(10 * np.random.random()),
+            'subsample': 0.6 + 0.4 * np.random.random(),
+            'base_score': np.random.random(),
+#            'min_child_weight': int(1 + 3 * np.random.random()),
+#            'scale_pos_weight': 9,
+            'learning_rate': 0.05,
+            'n_jobs': 4
+            }
+    
+    xgb = XGBClassifier(**param)
+    
+    clfs.append(xgb)
+    clf_names.append('XGB' + str(i+1))
+    clf_params.append(param)
 
 
-xgb4 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
+print('Model Training...')
 
-xgb5 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb6 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb7 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb8 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb9 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb10 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-
-clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10][:clf_num]
-clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10'][:clf_num]
-
-#clfs = [xgb1, xgb2, xgb3]
-#clf_names = ['XGB1', 'XGB2', 'XGB3']
 
 train_preds = []
 valid_preds = []
+valid_aucs = []
 
 for i in range(len(clfs)):
     
     clf = clfs[i]
     clf_name = clf_names[i]
+    
+    print(clf)
+    print('\n')
     
     clf.fit(x_train, y_train)
     
@@ -675,26 +650,49 @@ for i in range(len(clfs)):
     fpr, tpr, thresholds = metrics.roc_curve(y_valid, valid_pred, pos_label=1)
     valid_auc = metrics.auc(fpr, tpr)
     print(clf_name, 'Valid AUC:', valid_auc)
+    valid_aucs.append(valid_auc)
+    
+    
+    conf_mat = confusion_matrix(y_valid, np.round(valid_pred), labels = [1, 0])
+    print(conf_mat)
     
     train_preds.append(train_pred)
     valid_preds.append(valid_pred)
     
     print('Time Taken:', time.time()-stime)
-    print('\n')
+    print('\n\n')
+    
+
+the_best_clfs = []
+the_best_params = []
+the_best_valid_preds = []
+
+for i,j,k,l in sorted(zip(valid_aucs, clfs, clf_params, valid_preds), reverse = True):
+    the_best_clfs.append(j)
+    the_best_params.append(k)
+    the_best_valid_preds.append(l)
 
 
 
-ensemble_train_pred = None
-for train_pred in train_preds:
-    if ensemble_train_pred is None:
-        ensemble_train_pred = train_pred
-    else:
-        ensemble_train_pred = ensemble_train_pred * train_pred
-ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
+#ensemble_train_pred = None
+#for train_pred in train_preds:
+#    if ensemble_train_pred is None:
+#        ensemble_train_pred = train_pred
+#    else:
+#        ensemble_train_pred = ensemble_train_pred * train_pred
+#ensemble_train_pred = ensemble_train_pred/np.max(ensemble_train_pred)
+#
+#fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
+#train_auc = metrics.auc(fpr, tpr)
+#print('Ensemble Train AUC:', train_auc)
 
-fpr, tpr, thresholds = metrics.roc_curve(y_train, ensemble_train_pred, pos_label=1)
-train_auc = metrics.auc(fpr, tpr)
-print('Ensemble Train AUC:', train_auc)
+
+
+
+
+
+valid_preds = the_best_valid_preds[:int(best_ratio * clf_num)]
+
 
 
 
@@ -737,238 +735,10 @@ print('Ensemble4 Valid AUC:', valid_auc)
 #sys.exit()
 
 
-"""
 #############################################################################
-
-
-
-x = []
-y = []
-
-
-x_test = []
-fid_test = []
-fid_train = []
-
-title = []
-the_selected_title = []
-
-f = open('output.csv')
-for line in csv.reader(f):
-#    print(line)
-    
-    if line[0] == 'fid':
-        
-        title = line[1:-2]
-        for t in title:
-            
-            if True and \
-            not t.startswith('date') and \
-            not t.startswith('pid_0374c4') and \
-            not t.startswith('pid_05b409') and \
-            not t.startswith('pid_3c2be6') and \
-            not t.startswith('pid_aaa9c8') and \
-            not t.startswith('pid_cc3a6a') and \
-            not t.startswith('pid_8b7f69') and \
-            not t.startswith('appear_day_7') and \
-            not t.startswith('appear_day_6') and \
-            not t.startswith('appear_day_5') and \
-            not t.startswith('appear_day_4') and \
-            not t.startswith('march') and \
-            not t.startswith('april') and \
-            not t.startswith('may') and \
-            not (t.startswith('appear_') and t.endswith('_count'))  and \
-            not (t.startswith('appear_') and t.endswith('d/p_ratio'))and \
-            not (t.startswith('H_') and t.endswith('_count')) and \
-            not (t.startswith('pid_') and t.endswith('_count')) and \
-            not t in ['pid_0cdb7a_ratio', 'pid_218578_ratio', 'pid_75f310_ratio', 'pid_8452da_ratio', 'pid_fec24f_ratio',
-                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']:
-                
-                the_selected_title.append(t)
-        
-        
-        for t in hour_title:
-            
-            if True and \
-            not t.startswith('H_0_11_') and \
-            not t.startswith('H_12_23_') and \
-            not t.startswith('H_0_7_') and \
-            not t.startswith('H_8_15_') and \
-            not t.startswith('H_16_23_') and \
-            not t.startswith('H_0_5_') and \
-            not t.startswith('H_6_11_') and \
-            not t.startswith('H_12_17_') and \
-            not t.startswith('H_18_23_') and \
-            not t.startswith('X12_') and \
-            not t.startswith('X8_') and \
-            not t.startswith('X6_') and \
-            not t.startswith('H_') and \
-            not t.endswith('_cnt'):
-            
-                the_selected_title.append(t)
-            
-#            the_selected_title.append(t)
-        
-        
-        
-        for t in appear_hour_title:
-            
-            if True and \
-            not t.endswith('cnt') and \
-            not t.endswith('increase_rate') and \
-            not t.startswith('D1_H7') and \
-            not t.startswith('D1_H6') and \
-            not t.startswith('D1_H5') and \
-            not t.startswith('D1_H4'):
-                the_selected_title.append(t)
-        
-        
-        
-        for t in duration_title:
-            
-            if True:
-                the_selected_title.append(t)
-        
-        
-        
-        for t in mf_cid_50_title:
-            
-            if False and \
-            t not in ['mf_cid_50_10','mf_cid_50_11','mf_cid_50_12','mf_cid_50_13','mf_cid_50_18', \
-                      'mf_cid_50_20','mf_cid_50_23','mf_cid_50_24','mf_cid_50_25','mf_cid_50_28', \
-                      'mf_cid_50_29','mf_cid_50_33','mf_cid_50_35','mf_cid_50_39','mf_cid_50_44', \
-                      'mf_cid_50_6','mf_cid_50_9']:
-                the_selected_title.append(t)
-        
-        
-        for t in mf_cid_30_title:
-            
-            if True and \
-            t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
-                      'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
-                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']:
-                the_selected_title.append(t)
-                
-        
-        for t in mf_cid_15_title:
-            
-            if False and \
-            t not in ['mf_cid_15_10','mf_cid_15_11','mf_cid_15_12','mf_cid_15_13', 'mf_cid_15_6']:
-                the_selected_title.append(t)
-        
-        
-        
-        for t in mf_pid_10_title:
-            
-            if True:
-                the_selected_title.append(t)
-        
-        for t in mf_pid_5_title:
-            
-            if False:
-                the_selected_title.append(t)
-                
-                
-                
-        
-        
-        the_selected_title.append('h_infec_ratio')
-        the_selected_title.append('pid_infec_ratio')
-#        the_selected_title.append('cid_infec_ratio')
-        the_selected_title.append('duration_long')
-        the_selected_title.append('discrete_rate')
-        
-        the_selected_title.append('new_pid_infec_ratio')
-        
-        
-        print(the_selected_title)
-        continue
-                
-    
-    
-    the_fid = line[0]
-    the_data = line[1:-2]
-    the_selected_data = []
-    
-    for i in range(len(the_data)):
-        if title[i] in the_selected_title:
-            if 'count' in title[i]:
-                the_selected_data.append(np.log(float(the_data[i]) + eps))
-            else:
-                the_selected_data.append(float(the_data[i]))
-    
-    
-    
-    the_hour_data = fid2hour_data[the_fid]
-    for i in range(len(the_hour_data)):
-        if hour_title[i] in the_selected_title:
-            the_selected_data.append(float(the_hour_data[i]))
-    
-    
-    the_appear_hour_data = fid2appear_hour_data[the_fid]
-    for i in range(len(the_appear_hour_data)):
-        if appear_hour_title[i] in the_selected_title:
-            the_selected_data.append(float(the_appear_hour_data[i]))
-    
-        
-    the_duration_data = fid2duration_data[the_fid]
-    for i in range(len(the_duration_data)):
-        if duration_title[i] in the_selected_title:
-            the_selected_data.append(float(the_duration_data[i]))
-    
-    the_mf_cid_50_data = fid2mf_cid_50[the_fid]
-    for i in range(len(the_mf_cid_50_data)):
-        if mf_cid_50_title[i] in the_selected_title:
-            the_selected_data.append(float(the_mf_cid_50_data[i]))
-    
-    the_mf_cid_30_data = fid2mf_cid_30[the_fid]
-    for i in range(len(the_mf_cid_30_data)):
-        if mf_cid_30_title[i] in the_selected_title:
-            the_selected_data.append(float(the_mf_cid_30_data[i]))
-    
-    
-    the_mf_cid_15_data = fid2mf_cid_15[the_fid]
-    for i in range(len(the_mf_cid_15_data)):
-        if mf_cid_15_title[i] in the_selected_title:
-            the_selected_data.append(float(the_mf_cid_15_data[i]))
-    
-    
-    the_mf_pid_10_data = fid2mf_pid_10[the_fid]
-    for i in range(len(the_mf_pid_10_data)):
-        if mf_pid_10_title[i] in the_selected_title:
-            the_selected_data.append(float(the_mf_pid_10_data[i]))
-    
-    
-    the_mf_pid_5_data = fid2mf_pid_5[the_fid]
-    for i in range(len(the_mf_pid_5_data)):
-        if mf_pid_5_title[i] in the_selected_title:
-            the_selected_data.append(float(the_mf_pid_5_data[i]))
-            
-    
-    the_selected_data.append(fid2h_infec_ratio[the_fid])
-    the_selected_data.append(fid2pid_infec_ratio[the_fid])
-#    the_selected_data.append(fid2cid_infec_ratio[the_fid])
-    the_selected_data.append(fid2duration_long[the_fid])
-    the_selected_data.append(fid2discrete_rate[the_fid])
-    
-    
-    the_selected_data.append(fid2new_pid_infec_ratio[the_fid])
-    
-    
-    if line[-1] == 'train':
-        
-        x.append(the_selected_data)
-        y.append(int(line[-2]))
-        fid_train.append(line[0])
-    
-    elif line[-1] == 'test':
-        x_test.append(the_selected_data)
-        fid_test.append(line[0])
-    
-    
-f.close()
-
-
+print('\n')
+print('<Testing>')
+#############################################################################
 
 
 x = np.asarray(x)
@@ -989,20 +759,6 @@ y_train = y
 x_test = x_test
 
 
-
-
-#x_train_mean = np.mean(x_train, axis=0)
-#x_train_std = np.std(x_train, axis=0) + eps
-#
-#
-#x_train = x_train - np.tile(x_train_mean,(len(x_train),1))
-#x_train = x_train/np.tile(x_train_std,(len(x_train),1))
-#
-#
-#x_test = x_test - np.tile(x_train_mean,(len(x_test),1))
-#x_test = x_test/np.tile(x_train_std,(len(x_test),1))
-
-
 x_mean = np.mean(x, axis=0)
 x_std = np.std(x, axis=0) + eps
 
@@ -1015,112 +771,72 @@ x_test = x_test/np.tile(x_std,(len(x_test),1))
 
 
 
+#x_train_add = []
+#y_train_add = []
+#for i in range(len(y_train)):
+#    if y_train[i] == 1:
+#        for j in range(9 - 1):
+#            x_train_add.append(x_train[i,:])
+#            y_train_add.append(y_train[i])
+#
+#x_train_add = np.asarray(x_train_add)
+#y_train_add = np.asarray(y_train_add)         
+#
+#x_train = np.vstack([x_train, x_train_add])
+#y_train = np.append(y_train, y_train_add)
+
+
+print('x_train shape', x_train.shape)
+print('y_train shape', y_train.shape)
+
+#####################################################
+
+
+
+
 print('Model Building...')
 
-#rf = RandomForestClassifier(n_estimators = estimators_num,
-#                            max_features = 0.5,
-#                            n_jobs = 4)
-#
-#ext = ExtraTreesClassifier(n_estimators = estimators_num,
-#                           max_features = 0.5,
-#                           n_jobs = 4)
 
-xgb1 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
+clfs = []
+clf_names = []
+clf_params = the_best_params[:int(best_ratio * clf_num)]
 
-xgb2 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb3 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb4 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb5 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb6 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb7 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb8 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb9 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
-
-xgb10 = XGBClassifier(n_estimators = estimators_num,
-                    colsample_bylevel = 0.6 + 0.4 * np.random.random(),
-                    colsample_bytree = 0.6 + 0.4 * np.random.random(),
-                    max_depth = 15 + int(10 * np.random.random()),
-                    learning_rate = 0.05,
-                    subsample = 0.6 + 0.4 * np.random.random(),
-                    n_jobs = 4
-                    )
+#for i in range(clf_num):
+#    
+#    param = {
+#            'n_estimators': estimators_num,
+#            'colsample_bylevel': 0.6 + 0.4 * np.random.random(),
+#            'colsample_bytree': 0.6 + 0.4 * np.random.random(),
+#            'max_depth': 15 + int(10 * np.random.random()),
+#            'subsample': 0.6 + 0.4 * np.random.random(),
+#            'base_score': np.random.random(),
+##            'min_child_weight': int(1 + 3 * np.random.random()),
+##            'scale_pos_weight': 9,
+#            'learning_rate': 0.05,
+#            'n_jobs': 4
+#            }
+#    
+#    xgb = XGBClassifier(**param)
+#    
+#    clfs.append(xgb)
+#    clf_names.append('XGB' + str(i+1))
 
 
-clfs = [xgb1, xgb2, xgb3, xgb4, xgb5, xgb6, xgb7, xgb8, xgb9, xgb10][:clf_num]
-clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5', 'XGB6', 'XGB7', 'XGB8', 'XGB9', 'XGB10'][:clf_num]
+for i in range(len(clf_params)):
+    
+    param = clf_params[i]
+    
+    xgb = XGBClassifier(**param)
+    
+    clfs.append(xgb)
+    clf_names.append('XGB' + str(i+1))
 
-#clfs = [xgb1, xgb2, xgb3, xgb4, xgb5]
-#clf_names = ['XGB1', 'XGB2', 'XGB3', 'XGB4', 'XGB5']
+
+
+
+print('Model Training...')
+
+
 
 train_preds = []
 test_preds = []
@@ -1129,6 +845,9 @@ for i in range(len(clfs)):
     
     clf = clfs[i]
     clf_name = clf_names[i]
+    
+    print(clf)
+    print('\n')
     
     clf.fit(x_train, y_train)
     
@@ -1144,7 +863,7 @@ for i in range(len(clfs)):
     test_preds.append(test_pred)
     
     print('Time Taken:', time.time()-stime)
-    print('\n')
+    print('\n\n')
 
 
 
