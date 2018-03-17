@@ -25,7 +25,7 @@ query_log_dir = './query_log'
 query_files = os.listdir(query_log_dir)
 query_files = sorted(query_files)
 
-eps = 10**-5
+eps = 10 ** -5
 
 
 """
@@ -215,6 +215,10 @@ for i in range(len(fids)):
     fid2data[fid]['prior4_cid_match_count'] = 0
     fid2data[fid]['prior4_cid_match_ratio'] = 0
     
+    fid2data[fid]['prior5_cid'] = ''
+    fid2data[fid]['prior5_cid_match_count'] = 0
+    fid2data[fid]['prior5_cid_match_ratio'] = 0
+    
     
     for month in ['march', 'april', 'may']:
         
@@ -223,9 +227,13 @@ for i in range(len(fids)):
         fid2data[fid][month + '_qts_step_mean'] = 0
         fid2data[fid][month + '_qts_step_std'] = 0
         fid2data[fid][month + '_qts_step_min'] = 0
+        fid2data[fid][month + '_qts_step_Q0.5'] = 0
         fid2data[fid][month + '_qts_step_Q1'] = 0
+        fid2data[fid][month + '_qts_step_Q1.5'] = 0
         fid2data[fid][month + '_qts_step_Q2'] = 0
+        fid2data[fid][month + '_qts_step_Q2.5'] = 0
         fid2data[fid][month + '_qts_step_Q3'] = 0
+        fid2data[fid][month + '_qts_step_Q3.5'] = 0
         fid2data[fid][month + '_qts_step_max'] = 0
     
     
@@ -234,9 +242,13 @@ for i in range(len(fids)):
     fid2data[fid]['qts_step_mean'] = 0
     fid2data[fid]['qts_step_std'] = 0
     fid2data[fid]['qts_step_min'] = 0
+    fid2data[fid]['qts_step_Q0.5'] = 0
     fid2data[fid]['qts_step_Q1'] = 0
+    fid2data[fid]['qts_step_Q1.5'] = 0
     fid2data[fid]['qts_step_Q2'] = 0
+    fid2data[fid]['qts_step_Q2.5'] = 0
     fid2data[fid]['qts_step_Q3'] = 0
+    fid2data[fid]['qts_step_Q3.5'] = 0
     fid2data[fid]['qts_step_max'] = 0
         
     for month in ['march', 'april', 'may']:
@@ -366,7 +378,11 @@ for date_file in query_files:
         if cid == fid2data[fid]['prior4_cid']:
             fid2data[fid]['prior4_cid_match_count'] += 1
         
+        if cid == fid2data[fid]['prior5_cid']:
+            fid2data[fid]['prior5_cid_match_count'] += 1
         
+        
+        fid2data[fid]['prior5_cid'] = fid2data[fid]['prior4_cid']
         fid2data[fid]['prior4_cid'] = fid2data[fid]['prior3_cid']
         fid2data[fid]['prior3_cid'] = fid2data[fid]['prior2_cid']
         fid2data[fid]['prior2_cid'] = fid2data[fid]['prior1_cid']
@@ -428,9 +444,13 @@ for fid in fids:
     fid2data[fid]['qts_step_mean'] = np.mean(the_qts_step_list)
     fid2data[fid]['qts_step_std'] = np.std(the_qts_step_list)
     fid2data[fid]['qts_step_min'] = np.min(the_qts_step_list)
+    fid2data[fid]['qts_step_Q0.5'] = np.percentile(the_qts_step_list, 12.5)
     fid2data[fid]['qts_step_Q1'] = np.percentile(the_qts_step_list, 25)
+    fid2data[fid]['qts_step_Q1.5'] = np.percentile(the_qts_step_list, 37.5)
     fid2data[fid]['qts_step_Q2'] = np.percentile(the_qts_step_list, 50)
+    fid2data[fid]['qts_step_Q2.5'] = np.percentile(the_qts_step_list, 62.5)
     fid2data[fid]['qts_step_Q3'] = np.percentile(the_qts_step_list, 75)
+    fid2data[fid]['qts_step_Q3.5'] = np.percentile(the_qts_step_list, 87.5)
     fid2data[fid]['qts_step_max'] = np.max(the_qts_step_list)
     
     
@@ -445,9 +465,13 @@ for fid in fids:
         fid2data[fid][month + '_qts_step_mean'] = np.mean(the_qts_step_list)
         fid2data[fid][month + '_qts_step_std'] = np.std(the_qts_step_list)
         fid2data[fid][month + '_qts_step_min'] = np.min(the_qts_step_list)
+        fid2data[fid][month + '_qts_step_Q0.5'] = np.percentile(the_qts_step_list, 12.5)
         fid2data[fid][month + '_qts_step_Q1'] = np.percentile(the_qts_step_list, 25)
+        fid2data[fid][month + '_qts_step_Q1.5'] = np.percentile(the_qts_step_list, 37.5)
         fid2data[fid][month + '_qts_step_Q2'] = np.percentile(the_qts_step_list, 50)
+        fid2data[fid][month + '_qts_step_Q2.5'] = np.percentile(the_qts_step_list, 62.5)
         fid2data[fid][month + '_qts_step_Q3'] = np.percentile(the_qts_step_list, 75)
+        fid2data[fid][month + '_qts_step_Q3.5'] = np.percentile(the_qts_step_list, 87.5)
         fid2data[fid][month + '_qts_step_max'] = np.max(the_qts_step_list)
 
 
@@ -493,6 +517,7 @@ for fid in fids:
     fid2data[fid]['prior2_cid_match_ratio'] = fid2data[fid]['prior2_cid_match_count']/fid2data[fid]['count']
     fid2data[fid]['prior3_cid_match_ratio'] = fid2data[fid]['prior3_cid_match_count']/fid2data[fid]['count']
     fid2data[fid]['prior4_cid_match_ratio'] = fid2data[fid]['prior4_cid_match_count']/fid2data[fid]['count']
+    fid2data[fid]['prior5_cid_match_ratio'] = fid2data[fid]['prior5_cid_match_count']/fid2data[fid]['count']
     
     for month in ['march', 'april', 'may']:
         fid2data[fid][month + '_ratio'] = fid2data[fid][month + '_count']/fid2data[fid]['count']
@@ -633,22 +658,33 @@ data.append('prior3_cid_match_ratio')
 data.append('prior4_cid_match_count')
 data.append('prior4_cid_match_ratio')
 
+data.append('prior5_cid_match_count')
+data.append('prior5_cid_match_ratio')
+
 for month in ['march', 'april', 'may']:
     data.append(month + '_qts_step_mean')
     data.append(month + '_qts_step_std')
     data.append(month + '_qts_step_min')
+    data.append(month + '_qts_step_Q0.5')
     data.append(month + '_qts_step_Q1')
+    data.append(month + '_qts_step_Q1.5')
     data.append(month + '_qts_step_Q2')
+    data.append(month + '_qts_step_Q2.5')
     data.append(month + '_qts_step_Q3')
+    data.append(month + '_qts_step_Q3.5')
     data.append(month + '_qts_step_max')
 
 
 data.append('qts_step_mean')
 data.append('qts_step_std')
 data.append('qts_step_min')
+data.append('qts_step_Q0.5')
 data.append('qts_step_Q1')
+data.append('qts_step_Q1.5')
 data.append('qts_step_Q2')
+data.append('qts_step_Q2.5')
 data.append('qts_step_Q3')
+data.append('qts_step_Q3.5')
 data.append('qts_step_max')
 
     
@@ -777,22 +813,33 @@ for fid in fid2data:
     
     data.append(fid2data[fid]['prior4_cid_match_count'])
     data.append(fid2data[fid]['prior4_cid_match_ratio'])
+    
+    data.append(fid2data[fid]['prior5_cid_match_count'])
+    data.append(fid2data[fid]['prior5_cid_match_ratio'])
         
     for month in ['march', 'april', 'may']:
         data.append(fid2data[fid][month + '_qts_step_mean'])
         data.append(fid2data[fid][month + '_qts_step_std'])
         data.append(fid2data[fid][month + '_qts_step_min'])
+        data.append(fid2data[fid][month + '_qts_step_Q0.5'])
         data.append(fid2data[fid][month + '_qts_step_Q1'])
+        data.append(fid2data[fid][month + '_qts_step_Q1.5'])
         data.append(fid2data[fid][month + '_qts_step_Q2'])
+        data.append(fid2data[fid][month + '_qts_step_Q2.5'])
         data.append(fid2data[fid][month + '_qts_step_Q3'])
+        data.append(fid2data[fid][month + '_qts_step_Q3.5'])
         data.append(fid2data[fid][month + '_qts_step_max'])
     
     data.append(fid2data[fid]['qts_step_mean'])
     data.append(fid2data[fid]['qts_step_std'])
     data.append(fid2data[fid]['qts_step_min'])
+    data.append(fid2data[fid]['qts_step_Q0.5'])
     data.append(fid2data[fid]['qts_step_Q1'])
+    data.append(fid2data[fid]['qts_step_Q1.5'])
     data.append(fid2data[fid]['qts_step_Q2'])
+    data.append(fid2data[fid]['qts_step_Q2.5'])
     data.append(fid2data[fid]['qts_step_Q3'])
+    data.append(fid2data[fid]['qts_step_Q3.5'])
     data.append(fid2data[fid]['qts_step_max'])
     
 

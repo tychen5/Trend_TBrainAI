@@ -20,16 +20,17 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.2
-clf_num = 60
-estimators_num = 600
+best_ratio = 0.1
+clf_num = 100
+estimators_num = 800
 
 
 fid2new_cid_infec_ratio = {}
 a = []
 
 count = 0
-f = open('june_customer_ratio_mean_new.csv')
+#f = open('june_customer_ratio_mean_new.csv')
+f = open('june_cus_ratio_padding_twice.csv')
 for line in csv.reader(f):
     count += 1
     if count == 1:
@@ -37,7 +38,6 @@ for line in csv.reader(f):
     fid2new_cid_infec_ratio[line[0]] = float(line[1])
     a.append(float(line[1]))
 f.close()
-
 
 
 fid2new_pid_infec_ratio = {}
@@ -606,7 +606,7 @@ for i in range(clf_num):
             'n_estimators': estimators_num,
             'colsample_bylevel': 0.6 + 0.4 * np.random.random(),
             'colsample_bytree': 0.6 + 0.4 * np.random.random(),
-            'max_depth': 15 + int(10 * np.random.random()),
+            'max_depth': 18 + int(10 * np.random.random()),
             'subsample': 0.6 + 0.4 * np.random.random(),
             'base_score': np.random.random(),
 #            'min_child_weight': int(1 + 3 * np.random.random()),
