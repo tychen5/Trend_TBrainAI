@@ -20,13 +20,33 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.1
-clf_num = 100
-estimators_num = 800
+best_ratio = 0.25
+clf_num = 40
+estimators_num = 600
+
+
+
+
+
+
+
+uni_title = ['uni_cus_cnt','uni_cus_ratio','uni_pro_cnt','uni_pro_ratio']
+fid2uni_data = {}
+count = 0
+f = open('june_unique_counts_and_ratio.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2uni_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+#sys.exit()
+
+
 
 
 fid2new_cid_infec_ratio = {}
-a = []
 
 count = 0
 #f = open('june_customer_ratio_mean_new.csv')
@@ -36,7 +56,6 @@ for line in csv.reader(f):
     if count == 1:
         continue
     fid2new_cid_infec_ratio[line[0]] = float(line[1])
-    a.append(float(line[1]))
 f.close()
 
 
@@ -340,6 +359,13 @@ for line in csv.reader(f):
                 the_selected_title.append(t)
         
         
+        for t in uni_title:
+            
+            if take_all or \
+            (True):
+                the_selected_title.append(t)
+        
+        
         
         for t in mf_cid_50_title:
             
@@ -434,6 +460,11 @@ for line in csv.reader(f):
     for i in range(len(the_duration_data)):
         if duration_title[i] in the_selected_title:
             the_selected_data.append(float(the_duration_data[i]))
+    
+    the_uni_data = fid2uni_data[the_fid]
+    for i in range(len(the_uni_data)):
+        if uni_title[i] in the_selected_title:
+            the_selected_data.append(float(the_uni_data[i]))
     
     the_mf_cid_50_data = fid2mf_cid_50[the_fid]
     for i in range(len(the_mf_cid_50_data)):
@@ -663,11 +694,13 @@ for i in range(len(clfs)):
     print('\n\n')
     
 
+the_best_aucs = []
 the_best_clfs = []
 the_best_params = []
 the_best_valid_preds = []
 
 for i,j,k,l in sorted(zip(valid_aucs, clfs, clf_params, valid_preds), reverse = True):
+    the_best_aucs.append(i)
     the_best_clfs.append(j)
     the_best_params.append(k)
     the_best_valid_preds.append(l)
