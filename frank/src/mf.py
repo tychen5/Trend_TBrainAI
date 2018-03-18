@@ -90,17 +90,19 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
             # compute ratio
             print('Compute cid ratio')
             for fid in fid_cid_cnt_mapping:
-                fid_sum = 0
+                fid_sum = 0.01
                 for cid in fid_cid_cnt_mapping[fid]:
                     fid_sum += fid_cid_cnt_mapping[fid][cid]
+                print('sum: %f' %(fid_sum))
                 for cid in fid_cid_cnt_mapping[fid]:
                     fid_cid_cnt_mapping[fid][cid] /= fid_sum
             
             print('Compute pid ratio')
             for fid in fid_pid_cnt_mapping:
-                fid_sum = 0
+                fid_sum = 0.01
                 for pid in fid_pid_cnt_mapping[fid]:
                     fid_sum += fid_pid_cnt_mapping[fid][pid]
+                print('sum: %f' %(fid_sum))
                 for pid in fid_pid_cnt_mapping[fid]:
                     fid_pid_cnt_mapping[fid][pid] /= fid_sum
 
