@@ -10,7 +10,7 @@ from utils import *
 from collectTimeFeature import getRowMapping
 
 # WORKING_CPU = 5
-FID_CID_RANK = 50
+FID_CID_RANK = 30
 FID_PID_RANK = 10
 MAX_ITER = 200
 
@@ -87,6 +87,23 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
                 fid_cid_cnt_mapping, cid2id, id2cid = addToCntMapping(fid_cid_cnt_mapping, cid2id, id2cid, query_fid, query_cid)
                 fid_pid_cnt_mapping, pid2id, id2pid = addToCntMapping(fid_pid_cnt_mapping, pid2id, id2pid, query_fid, query_pid)    
             
+            # compute ratio
+            print('Compute cid ratio')
+            for fid in fid_cid_cnt_mapping:
+                fid_sum = 0
+                for cid in fid_cid_cnt_mapping[fid]:
+                    fid_sum += fid_cid_cnt_mapping[fid][cid]
+                for cid in fid_cid_cnt_mapping[fid]:
+                    fid_cid_cnt_mapping[fid][cid] /= fid_sum
+            
+            print('Compute pid ratio')
+            for fid in fid_pid_cnt_mapping:
+                fid_sum = 0
+                for pid in fid_pid_cnt_mapping[fid]:
+                    fid_sum += fid_pid_cnt_mapping[fid][pid]
+                for pid in fid_pid_cnt_mapping[fid]:
+                    fid_pid_cnt_mapping[fid][pid] /= fid_sum
+
             # get csr_matrix source array
             print('Getting array for building csr_matrix')
             row_fid_cid, col_cid, fid_cid_pair_cnt = getPairCnt(fid_cid_cnt_mapping, cid2id, id2fid)
@@ -155,10 +172,10 @@ def getCidAndPidFeatureFromMF(refresh_flag = False):
         # writing feature data
         # writeCSV
         
-        writePickle(fid_cid_W, path['MF_FID_CID_BASIS_PKL_FILE'] + '.' + str(FID_CID_RANK))
-        writePickle(fid_cid_H, path['MF_FID_CID_COEF_PKL_FILE'] + '.' + str(FID_CID_RANK))
-        writePickle(fid_pid_W, path['MF_FID_PID_BASIS_PKL_FILE'] + '.' + str(FID_PID_RANK))
-        writePickle(fid_pid_H, path['MF_FID_PID_COEF_PKL_FILE'] + '.' + str(FID_PID_RANK))
+        writePickle(fid_cid_W, path['MF_FID_CID_BASIS_PKL_FILE'] + '.ratio.' + str(FID_CID_RANK))
+        writePickle(fid_cid_H, path['MF_FID_CID_COEF_PKL_FILE'] + '.ratio.' + str(FID_CID_RANK))
+        writePickle(fid_pid_W, path['MF_FID_PID_BASIS_PKL_FILE'] + '.ratio.' + str(FID_PID_RANK))
+        writePickle(fid_pid_H, path['MF_FID_PID_COEF_PKL_FILE'] + '.ratio.' + str(FID_PID_RANK))
         
         cid_feat = fid_cid_W
         pid_feat = fid_pid_W
