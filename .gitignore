@@ -3,4 +3,5 @@ frank/data/**/*
 leo/query_log/*
 leo/data/*
 leo/.ipynb_checkpoints/*
+leo/model/*
 **/*.pyc
