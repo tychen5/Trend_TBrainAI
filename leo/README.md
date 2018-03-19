@@ -23,6 +23,10 @@ hello there~
 
 * csv/MF_cid50.csv => mf_fid_cid_basis.pkl.50
 
+* csv/MF_pid_ratio_10.csv => pid_10 ratio
+
+* csv/MF_cid_ratio_30.csv => cid 30 ratio
+
 ## Intro of Me ##
 - 孫媽lab
 
