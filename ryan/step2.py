@@ -20,14 +20,35 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.25
-clf_num = 40
+best_ratio = 0.4
+clf_num = 20
 estimators_num = 600
 
 
+appear_pid_uni_title = []
+fid2appear_pid_uni_data = {}
+count = 0
+f = open('june_product_day1-7.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        appear_pid_uni_title = line[1:]
+        continue
+    fid2appear_pid_uni_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
-
+appear_cid_uni_title = []
+fid2appear_cid_uni_data = {}
+count = 0
+f = open('june_customer_day1-7.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        appear_cid_uni_title = line[1:]
+        continue
+    fid2appear_cid_uni_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
 uni_title = ['uni_cus_cnt','uni_cus_ratio','uni_pro_cnt','uni_pro_ratio']
@@ -40,10 +61,6 @@ for line in csv.reader(f):
         continue
     fid2uni_data[line[0]] = [float(x) for x in line[1:]]
 f.close()
-
-#sys.exit()
-
-
 
 
 fid2new_cid_infec_ratio = {}
@@ -146,6 +163,44 @@ for line in csv.reader(f):
         continue
     fid2mf_cid_15[line[0]] = [float(x) for x in line[1:]]
 f.close()
+
+
+
+
+mf_pid_ratio_10_title = []
+for i in range(1,11):
+    mf_pid_ratio_10_title.append('mf_pid_ratio_10_' + str(i))
+
+fid2mf_pid_ratio_10 = {}
+count = 0
+f = open('frank_MF_pid_ratio_10.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_pid_ratio_10[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+mf_cid_ratio_30_title = []
+for i in range(1,31):
+    mf_cid_ratio_30_title.append('mf_cid_ratio_30_' + str(i))
+
+fid2mf_cid_ratio_30 = {}
+count = 0
+f = open('frank_MF_cid_ratio_30.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_ratio_30[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+
+
 
 
 fid2duration_long = {}
@@ -308,7 +363,8 @@ for line in csv.reader(f):
             not (t.startswith('H_') and t.endswith('_count')) and \
             not (t.startswith('pid_') and t.endswith('_count')) and \
             not t in ['pid_0cdb7a_ratio', 'pid_218578_ratio', 'pid_75f310_ratio', 'pid_8452da_ratio', 'pid_fec24f_ratio',
-                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio']
+                      'pid_262880_ratio', 'pid_a310bb_ratio', 'pid_26a5d0_ratio', 'pid_dd8d4a_ratio', 'pid_8541a0_ratio'] and \
+            not t.endswith('match_count')
             ):
                 the_selected_title.append(t)
         
@@ -366,6 +422,28 @@ for line in csv.reader(f):
                 the_selected_title.append(t)
         
         
+        for t in appear_pid_uni_title:
+            
+            if take_all or \
+            (False and \
+             not t.endswith('_cnt') and \
+             not t.startswith('day7') and \
+             not t.endswith('day_ratio')
+             ):
+                the_selected_title.append(t)
+        
+        
+        for t in appear_cid_uni_title:
+            
+            if take_all or \
+            (False and \
+             not t.endswith('_cnt') and \
+             not t.startswith('day7') and \
+             not t.endswith('day_ratio')
+             ):
+                the_selected_title.append(t)
+        
+        
         
         for t in mf_cid_50_title:
             
@@ -410,6 +488,21 @@ for line in csv.reader(f):
             
             if take_all or \
             (False):
+                the_selected_title.append(t)
+                
+        
+        
+        for t in mf_pid_ratio_10_title:
+            
+            if take_all or \
+            (True):
+                the_selected_title.append(t)
+        
+        
+        for t in mf_cid_ratio_30_title:
+            
+            if take_all or \
+            (True):
                 the_selected_title.append(t)
                 
                 
@@ -466,6 +559,20 @@ for line in csv.reader(f):
         if uni_title[i] in the_selected_title:
             the_selected_data.append(float(the_uni_data[i]))
     
+    
+    the_appear_pid_uni_data = fid2appear_pid_uni_data[the_fid]
+    for i in range(len(the_appear_pid_uni_data)):
+        if appear_pid_uni_title[i] in the_selected_title:
+            the_selected_data.append(float(the_appear_pid_uni_data[i]))
+    
+    
+    the_appear_cid_uni_data = fid2appear_cid_uni_data[the_fid]
+    for i in range(len(the_appear_cid_uni_data)):
+        if appear_cid_uni_title[i] in the_selected_title:
+            the_selected_data.append(float(the_appear_cid_uni_data[i]))
+    
+    
+    
     the_mf_cid_50_data = fid2mf_cid_50[the_fid]
     for i in range(len(the_mf_cid_50_data)):
         if mf_cid_50_title[i] in the_selected_title:
@@ -493,6 +600,18 @@ for line in csv.reader(f):
     for i in range(len(the_mf_pid_5_data)):
         if mf_pid_5_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_pid_5_data[i]))
+    
+    
+    the_mf_cid_ratio_30_data = fid2mf_cid_ratio_30[the_fid]
+    for i in range(len(the_mf_cid_ratio_30_data)):
+        if mf_cid_ratio_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_ratio_30_data[i]))
+    
+    
+    the_mf_pid_ratio_10_data = fid2mf_pid_ratio_10[the_fid]
+    for i in range(len(the_mf_pid_ratio_10_data)):
+        if mf_pid_ratio_10_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_ratio_10_data[i]))
             
     
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -521,7 +640,8 @@ for line in csv.reader(f):
 f.close()
 
 
-
+fid_train = np.asarray(fid_train)
+fid_test = np.asarray(fid_test)
 
 x = np.asarray(x)
 y = np.asarray(y)
@@ -588,6 +708,7 @@ indices = np.random.permutation(x.shape[0])
 train_idx, valid_idx = indices[:int(x.shape[0] * train_valid_ratio)], indices[int(x.shape[0] * train_valid_ratio):]
 x_train, x_valid = x[train_idx,:], x[valid_idx,:]
 y_train, y_valid = y[train_idx], y[valid_idx]
+fid_train_train, fid_train_valid = fid_train[train_idx], fid_train[valid_idx]
 
 
 x_mean = np.mean(x, axis=0)
@@ -686,6 +807,13 @@ for i in range(len(clfs)):
     
     conf_mat = confusion_matrix(y_valid, np.round(valid_pred), labels = [1, 0])
     print(conf_mat)
+    
+#    for i in range(len(y_valid)):
+#        if round(valid_pred[i]) != y_valid[i]:
+#            print(fid_train_valid[i])
+#            print('pred: ', round(valid_pred[i]))
+#            print('true: ', round(y_valid[i]))
+    
     
     train_preds.append(train_pred)
     valid_preds.append(valid_pred)
