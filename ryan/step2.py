@@ -20,9 +20,23 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.4
-clf_num = 20
-estimators_num = 600
+best_ratio = 0.2
+clf_num = 50
+estimators_num = 800
+
+
+
+appear_uni_stat_title = []
+fid2appear_uni_stat_data = {}
+count = 0
+f = open('june_day_uni_statistic.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        appear_uni_stat_title = line[1:]
+        continue
+    fid2appear_uni_stat_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
 appear_pid_uni_title = []
@@ -182,6 +196,36 @@ for line in csv.reader(f):
 f.close()
 
 
+mf_pid_ratio_15_title = []
+for i in range(1,16):
+    mf_pid_ratio_15_title.append('mf_pid_ratio_15_' + str(i))
+
+fid2mf_pid_ratio_15 = {}
+count = 0
+f = open('frank_MF_pid_ratio_15.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_pid_ratio_15[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+mf_cid_ratio_15_title = []
+for i in range(1,16):
+    mf_cid_ratio_15_title.append('mf_cid_ratio_15_' + str(i))
+
+fid2mf_cid_ratio_15 = {}
+count = 0
+f = open('frank_MF_cid_ratio_15.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_ratio_15[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
 
 mf_cid_ratio_30_title = []
 for i in range(1,31):
@@ -195,6 +239,22 @@ for line in csv.reader(f):
     if count == 1:
         continue
     fid2mf_cid_ratio_30[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+mf_cid_ratio_50_title = []
+for i in range(1,51):
+    mf_cid_ratio_50_title.append('mf_cid_ratio_50_' + str(i))
+
+fid2mf_cid_ratio_50 = {}
+count = 0
+f = open('frank_MF_cid_ratio_50.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf_cid_ratio_50[line[0]] = [float(x) for x in line[1:]]
 f.close()
 
 
@@ -444,6 +504,17 @@ for line in csv.reader(f):
                 the_selected_title.append(t)
         
         
+        for t in appear_uni_stat_title:
+            
+            if take_all or \
+            (False and \
+             'cnt' not in t and \
+             'day' not in t and \
+             'pro' not in t
+             ):
+                the_selected_title.append(t)
+        
+        
         
         for t in mf_cid_50_title:
             
@@ -489,13 +560,13 @@ for line in csv.reader(f):
             if take_all or \
             (False):
                 the_selected_title.append(t)
-                
         
         
-        for t in mf_pid_ratio_10_title:
+        
+        for t in mf_cid_ratio_50_title:
             
             if take_all or \
-            (True):
+            (False):
                 the_selected_title.append(t)
         
         
@@ -504,7 +575,30 @@ for line in csv.reader(f):
             if take_all or \
             (True):
                 the_selected_title.append(t)
+        
+        
+        for t in mf_cid_ratio_15_title:
+            
+            if take_all or \
+            (False):
+                the_selected_title.append(t)
                 
+        
+        
+        for t in mf_pid_ratio_15_title:
+            
+            if take_all or \
+            (False):
+                the_selected_title.append(t)
+        
+        
+        
+        for t in mf_pid_ratio_10_title:
+            
+            if take_all or \
+            (True):
+                the_selected_title.append(t)
+        
                 
                 
         
@@ -572,6 +666,12 @@ for line in csv.reader(f):
             the_selected_data.append(float(the_appear_cid_uni_data[i]))
     
     
+    the_appear_uni_stat_data = fid2appear_uni_stat_data[the_fid]
+    for i in range(len(the_appear_uni_stat_data)):
+        if appear_uni_stat_title[i] in the_selected_title:
+            the_selected_data.append(float(the_appear_uni_stat_data[i]))
+    
+    
     
     the_mf_cid_50_data = fid2mf_cid_50[the_fid]
     for i in range(len(the_mf_cid_50_data)):
@@ -602,10 +702,29 @@ for line in csv.reader(f):
             the_selected_data.append(float(the_mf_pid_5_data[i]))
     
     
+    
+    the_mf_cid_ratio_50_data = fid2mf_cid_ratio_50[the_fid]
+    for i in range(len(the_mf_cid_ratio_50_data)):
+        if mf_cid_ratio_50_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_ratio_50_data[i]))
+            
+    
     the_mf_cid_ratio_30_data = fid2mf_cid_ratio_30[the_fid]
     for i in range(len(the_mf_cid_ratio_30_data)):
         if mf_cid_ratio_30_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_cid_ratio_30_data[i]))
+    
+    
+    the_mf_cid_ratio_15_data = fid2mf_cid_ratio_15[the_fid]
+    for i in range(len(the_mf_cid_ratio_15_data)):
+        if mf_cid_ratio_15_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_cid_ratio_15_data[i]))
+    
+    
+    the_mf_pid_ratio_15_data = fid2mf_pid_ratio_15[the_fid]
+    for i in range(len(the_mf_pid_ratio_15_data)):
+        if mf_pid_ratio_15_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf_pid_ratio_15_data[i]))        
     
     
     the_mf_pid_ratio_10_data = fid2mf_pid_ratio_10[the_fid]
