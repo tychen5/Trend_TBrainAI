@@ -4,4 +4,5 @@ leo/query_log/*
 leo/data/*
 leo/.ipynb_checkpoints/*
 leo/model/*
+leo/history/*
 **/*.pyc
