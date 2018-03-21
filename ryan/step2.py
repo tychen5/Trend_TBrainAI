@@ -15,15 +15,52 @@ from xgboost.sklearn import XGBClassifier
 from sklearn import metrics
 from sklearn import svm
 from sklearn.metrics import confusion_matrix
+import math
+
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
 
 stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.2
-clf_num = 50
-estimators_num = 800
+best_ratio = 0.5
+clf_num = 15
+estimators_num = 600
+count_thresh = 0
 
+fid2stk_NN1 = {}
+count = 0
+f = open('stacking_NN_1.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2stk_NN1[line[1]] = float(line[2])
+f.close()
+
+
+fid2stk_NN2 = {}
+count = 0
+f = open('stacking_NN_2.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2stk_NN2[line[1]] = float(line[2])
+f.close()
+
+
+
+fid2cp_ratio = {}
+count = 0
+f = open('june_cp_ratio.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2cp_ratio[line[0]] = float(line[1])
+f.close()
 
 
 appear_uni_stat_title = []
@@ -402,7 +439,8 @@ for line in csv.reader(f):
         title = line[1:-2]
         for t in title:
             
-            if take_all or \
+            if (take_all and \
+                'march' not in t and 'april' not in t and 'may' not in t) or \
             (True and \
             not t.startswith('date') and \
             not t.startswith('pid_0374c4') and \
@@ -602,7 +640,7 @@ for line in csv.reader(f):
                 
                 
         
-        
+#        the_selected_title.append('cp_ratio')
         the_selected_title.append('h_infec_ratio')
         the_selected_title.append('pid_infec_ratio')
 #        the_selected_title.append('cid_infec_ratio')
@@ -611,6 +649,10 @@ for line in csv.reader(f):
         
         the_selected_title.append('new_pid_infec_ratio')
 #        the_selected_title.append('new_cid_infec_ratio')
+        
+        
+#        the_selected_title.append('stk_NN_1')
+#        the_selected_title.append('stk_NN_2')
         
         
         print(the_selected_title)
@@ -622,8 +664,15 @@ for line in csv.reader(f):
     the_data = line[1:-2]
     the_selected_data = []
     
+    count_thresh_check = True
+    
     for i in range(len(the_data)):
         if title[i] in the_selected_title:
+            
+            if title[i] == 'count':
+                if float(the_data[i]) < count_thresh:
+                    count_thresh_check = False
+            
             if 'count' in title[i]:
                 the_selected_data.append(np.log(float(the_data[i]) + eps))
             else:
@@ -732,7 +781,7 @@ for line in csv.reader(f):
         if mf_pid_ratio_10_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_pid_ratio_10_data[i]))
             
-    
+#    the_selected_data.append(fid2cp_ratio[the_fid])
     the_selected_data.append(fid2h_infec_ratio[the_fid])
     the_selected_data.append(fid2pid_infec_ratio[the_fid])
 #    the_selected_data.append(fid2cid_infec_ratio[the_fid])
@@ -744,7 +793,15 @@ for line in csv.reader(f):
 #    the_selected_data.append(fid2new_cid_infec_ratio[the_fid])
     
     
-    if line[-1] == 'train':
+#    try:
+#        the_selected_data.append(fid2stk_NN1[the_fid])
+#        the_selected_data.append(fid2stk_NN2[the_fid])
+#    except:
+#        the_selected_data.append(0)
+#        the_selected_data.append(0)
+    
+    
+    if line[-1] == 'train' and count_thresh_check:
         
         x.append(the_selected_data)
         y.append(int(line[-2]))
@@ -830,8 +887,8 @@ y_train, y_valid = y[train_idx], y[valid_idx]
 fid_train_train, fid_train_valid = fid_train[train_idx], fid_train[valid_idx]
 
 
-x_mean = np.mean(x, axis=0)
-x_std = np.std(x, axis=0) + eps
+x_mean = np.mean(np.vstack([x, x_test]), axis=0)
+x_std = np.std(np.vstack([x, x_test]), axis=0) + eps
 
 x_train = x_train - np.tile(x_mean,(len(x_train),1))
 x_train = x_train/np.tile(x_std,(len(x_train),1))
@@ -1039,8 +1096,8 @@ y_train = y
 x_test = x_test
 
 
-x_mean = np.mean(x, axis=0)
-x_std = np.std(x, axis=0) + eps
+x_mean = np.mean(np.vstack([x, x_test]), axis=0)
+x_std = np.std(np.vstack([x, x_test]), axis=0) + eps
 
 x_train = x_train - np.tile(x_mean,(len(x_train),1))
 x_train = x_train/np.tile(x_std,(len(x_train),1))
