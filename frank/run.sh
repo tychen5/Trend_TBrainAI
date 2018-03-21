@@ -24,6 +24,8 @@ elif [ $1 == "time" ]; then
     python ${src_dir}/collectTimeFeature.py
 elif [ $1 == "mf" ]; then
     python ${src_dir}/mf.py
+elif [ $1 == "train" ]; then
+    python ${src_dir}/train.py --xgb_nfold 10 
 elif [ $1 == "clean" ]; then
     rm -rf ${pkl_dir}/*
     rm -rf ${csv_dir}/time_feature.csv

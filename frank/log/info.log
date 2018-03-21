@@ -1,0 +1,214 @@
+2018-03-20 11:35:28,320 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:35:28,321 - logHandler - <module> - INFO - Namespace(sample_num=10, select_feature=False, select_feature_num=100, test_feature_file='./data/test_selected_features.csv', train_ans_file='./data/train_answers.csv', train_feature_file='./data/train_selected_features.csv', valid_ratio=0.1)
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 11:37:06,001 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 11:52:30,050 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 11:52:30,051 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 11:52:32,413 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 11:52:32,493 - logHandler - prepare_data - INFO - Selected train ans shape = 52518
+2018-03-20 11:52:33,760 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 11:57:02,451 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:57:02,451 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 11:57:02,451 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 11:57:02,452 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 11:57:02,452 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 11:57:02,452 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 11:57:02,452 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 11:57:02,452 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 11:57:04,879 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 11:57:04,961 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 11:57:06,285 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 11:57:06,335 - logHandler - <module> - INFO - ========================   End of Execution    ========================
+2018-03-20 11:57:14,924 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:57:14,924 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 11:57:14,924 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 11:57:14,925 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 11:57:14,925 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 11:57:14,925 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 11:57:14,925 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 11:57:14,925 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 11:57:17,383 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 11:57:17,496 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 11:57:19,134 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,134 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,135 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,135 - logHandler - sample_data - INFO - Current random seed: 
+2018-03-20 11:57:19,184 - logHandler - <module> - INFO - ========================   End of Execution    ========================
+2018-03-20 11:57:29,544 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 11:57:29,544 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 11:57:29,544 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 11:57:29,545 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 11:57:29,545 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 11:57:29,545 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 11:57:29,545 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 11:57:29,545 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 11:57:32,547 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 11:57:32,637 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 11:57:34,067 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 0
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 1
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 2
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 3
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 4
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 5
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 6
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 7
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 8
+2018-03-20 11:57:34,068 - logHandler - sample_data - INFO - Current random seed: 9
+2018-03-20 11:57:34,118 - logHandler - <module> - INFO - ========================   End of Execution    ========================
+2018-03-20 12:05:50,129 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:05:50,129 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:05:50,129 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:05:50,130 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:05:50,130 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:05:50,130 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:05:50,130 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:05:50,130 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:05:52,989 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:05:53,074 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:05:54,425 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:05:54,425 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:05:54,921 - logHandler - train - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:05:54,921 - logHandler - train - INFO - trainY shape = ( 47266 )
+2018-03-20 12:05:54,921 - logHandler - train - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:05:54,921 - logHandler - train - INFO - validY shape = (  5252 )
+2018-03-20 12:05:54,921 - logHandler - train - INFO - Iteration  1, Current random seed:  1
+2018-03-20 12:07:32,725 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:07:32,725 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:07:32,725 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:07:32,725 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:07:32,726 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:07:32,726 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:07:32,726 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:07:32,726 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:07:35,246 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:07:35,327 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:07:36,634 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:07:36,634 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:09:12,866 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:09:15,208 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:09:15,288 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:09:16,552 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:09:16,553 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:10:23,157 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:10:25,976 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:10:26,065 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:10:27,413 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:10:27,413 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:10:27,889 - logHandler - train - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:10:27,889 - logHandler - train - INFO - trainY shape = ( 47266 )
+2018-03-20 12:10:27,889 - logHandler - train - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:10:27,889 - logHandler - train - INFO - validY shape = (  5252 )
+2018-03-20 12:10:27,889 - logHandler - train - INFO - Iteration  1, Current random seed:  1
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:11:19,600 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:11:22,010 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:11:22,104 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:11:23,393 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:11:23,393 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:11:23,819 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:11:23,819 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:11:23,819 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:11:23,819 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:11:23,819 - logHandler - train - INFO - Iteration  1, Current random seed:  1
+2018-03-20 12:13:28,777 - logHandler - <module> - INFO - ======================== Execution of train.py ========================
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument sample_num: 10
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument select_feature: False
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument select_feature_num: 100
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument test_feature_file: './data/test_selected_features.csv'
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument train_ans_file: './data/train_answers.csv'
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument train_feature_file: './data/train_selected_features.csv'
+2018-03-20 12:13:28,778 - logHandler - <module> - INFO - Argument valid_ratio: 0.1
+2018-03-20 12:13:31,080 - logHandler - prepare_data - INFO - Selected train features shape = ( 52518 , 143 )
+2018-03-20 12:13:31,151 - logHandler - prepare_data - INFO - Selected train ans shape = ( 52518 )
+2018-03-20 12:13:32,600 - logHandler - prepare_data - INFO - Selected test features shape = ( 29376 , 143 )
+2018-03-20 12:13:32,600 - logHandler - train - INFO - Iteration  0, Current random seed:  0
+2018-03-20 12:13:32,969 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:33,018 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:33,018 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:33,018 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:33,018 - logHandler - train - INFO - Iteration  1, Current random seed:  1
+2018-03-20 12:13:33,375 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:33,421 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:33,421 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:33,421 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:33,460 - logHandler - train - INFO - Iteration  2, Current random seed:  2
+2018-03-20 12:13:33,818 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:33,864 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:33,865 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:33,865 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:33,895 - logHandler - train - INFO - Iteration  3, Current random seed:  3
+2018-03-20 12:13:34,251 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:34,297 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:34,297 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:34,297 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:34,335 - logHandler - train - INFO - Iteration  4, Current random seed:  4
+2018-03-20 12:13:34,691 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:34,737 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:34,737 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:34,737 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:34,771 - logHandler - train - INFO - Iteration  5, Current random seed:  5
+2018-03-20 12:13:35,143 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:35,199 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:35,200 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:35,200 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:35,249 - logHandler - train - INFO - Iteration  6, Current random seed:  6
+2018-03-20 12:13:35,612 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:35,669 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:35,669 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:35,669 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:35,702 - logHandler - train - INFO - Iteration  7, Current random seed:  7
+2018-03-20 12:13:36,061 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:36,117 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:36,117 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:36,117 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:36,160 - logHandler - train - INFO - Iteration  8, Current random seed:  8
+2018-03-20 12:13:36,527 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:36,583 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:36,584 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:36,584 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:36,616 - logHandler - train - INFO - Iteration  9, Current random seed:  9
+2018-03-20 12:13:36,976 - logHandler - sample_data - INFO - trainX shape = ( 47266, 143 )
+2018-03-20 12:13:37,032 - logHandler - sample_data - INFO - trainY shape = ( 47266 )
+2018-03-20 12:13:37,032 - logHandler - sample_data - INFO - validX shape = (  5252, 143 )
+2018-03-20 12:13:37,032 - logHandler - sample_data - INFO - validY shape = (  5252 )
+2018-03-20 12:13:37,152 - logHandler - <module> - INFO - ========================   End of Execution    ========================

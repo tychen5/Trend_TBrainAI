@@ -1,4 +1,4 @@
-import csv, pickle, os
+import csv, pickle, os, yaml
 import pandas as pd
 
 def getPath():
@@ -44,6 +44,14 @@ def getPath():
     mf_fid_pid_coef_pkl_file = os.path.join(info_pkl_dir, 'mf_fid_pid_coef.pkl')
     
     tmp = os.path.join(info_csv_dir, 'tmp.txt')
+    # config file
+    log_config_file = os.path.join(root_dir, 'config', 'logging.conf')
+    # features of training data and testing data
+    all_train_feature_file = os.path.join(data_dir, 'train_all_features.csv')
+    all_test_feature_file = os.path.join(data_dir, 'test_all_features.csv')
+    selected_train_feature_file = os.path.join(data_dir, 'train_selected_features.csv')
+    selected_test_feature_file = os.path.join(data_dir, 'test_selected_features.csv')
+    train_ans_file = os.path.join(data_dir, 'train_answers.csv')
 
     path = {
         'ROOT_DIR': root_dir,
@@ -74,11 +82,22 @@ def getPath():
         'MF_FID_CID_COEF_PKL_FILE': mf_fid_cid_coef_pkl_file,
         'MF_FID_PID_BASIS_PKL_FILE': mf_fid_pid_basis_pkl_file,
         'MF_FID_PID_COEF_PKL_FILE': mf_fid_pid_coef_pkl_file,
+        
+        'LOG_CONFIG_FILE': log_config_file,
+        # training usage
+        'ALL_TRAIN_FEATURE_CSV_FILE': all_train_feature_file,
+        'ALL_TEST_FEATURE_CSV_FILE': all_test_feature_file,
+        'SELECTED_TRAIN_FEATURE_CSV_FILE': selected_train_feature_file, 
+        'SELECTED_TEST_FEATURE_CSV_FILE': selected_test_feature_file,
+        'TRAIN_ANS_CSV_FILE': train_ans_file,
     }
     return path
 
 # def writeCSVandPKL(df, csvFile, pklFile):
-
+def readYaml(fin):
+        with open(fin) as file:
+                content = yaml.load(file)
+        return content
 
 def readCSV(file):
     # return 2d array of string
