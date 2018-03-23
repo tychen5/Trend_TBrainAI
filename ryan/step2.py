@@ -21,10 +21,40 @@ stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.3
-clf_num = 22
+best_ratio = 0.5
+clf_num = 20
 estimators_num = 600
 count_thresh = 0
+n_jobs = 4
+
+
+
+
+
+day6cid3_title = []
+fid2day6cid3_data = {}
+count = 0
+f = open('june_day_6_cid_3.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        day6cid3_title = line[1:]
+        continue
+    fid2day6cid3_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+d6c3_title = ['cus1_day1', 'cus1_day2', 'cus1_day3', 'cus1_day4', 'cus1_day5', 'cus1_day6',
+              'cus2_day1', 'cus2_day2', 'cus2_day3', 'cus2_day4', 'cus2_day5', 'cus2_day6',
+              'cus3_day1', 'cus3_day2', 'cus3_day3', 'cus3_day4', 'cus3_day5', 'cus3_day6',
+              ]
+
+fid2d6c3_data = {}
+f = open('frank_day_6_cid_3.csv')
+for line in csv.reader(f):
+    fid2d6c3_data[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
 
 
 fid2stk_NN1 = {}
@@ -335,6 +365,28 @@ f.close()
 
 
 
+
+mf6_cid_ratio_30_title = []
+for i in range(1,31):
+    mf6_cid_ratio_30_title.append('mf6_cid_ratio_30_' + str(i))
+    
+fid2mf6_cid_ratio_30 = {}
+
+for i in range(6):
+    count = 0
+    f = open('frank_mf6_ratio_sep' + str(i) + '.csv')
+    for line in csv.reader(f):
+        count += 1
+        if count == 1:
+            continue
+        if i == 0:
+            fid2mf6_cid_ratio_30[line[0]] = [float(x) for x in line[1:]][:5]
+        else:
+            fid2mf6_cid_ratio_30[line[0]] = fid2mf6_cid_ratio_30[line[0]] + [float(x) for x in line[1:]][:5]
+    f.close()
+
+
+
 new_mf_cid_ratio_30_title = []
 for i in range(1,31):
     new_mf_cid_ratio_30_title.append('new_mf_cid_ratio_30_' + str(i))
@@ -624,7 +676,7 @@ for line in csv.reader(f):
             (True and \
             t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
                       'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
-                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6','mf_cid_30_28','mf_cid_30_9']
+                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']
             ):
                 the_selected_title.append(t)
                 
@@ -663,8 +715,7 @@ for line in csv.reader(f):
         for t in mf_cid_ratio_30_title:
             
             if take_all or \
-            (True and \
-             t not in ['mf_cid_ratio_30_10']):
+            (True):
                 the_selected_title.append(t)
         
         
@@ -699,12 +750,39 @@ for line in csv.reader(f):
             ):
                 the_selected_title.append(t)
                 
+        for t in mf6_cid_ratio_30_title:
+            
+            if take_all or \
+            (True):
+                the_selected_title.append(t)
+                
                 
         for t in new_mf_cid_ratio_30_title:
             
             if take_all or \
-            (True and \
-             t not in ['new_mf_cid_ratio_30_5','new_mf_cid_ratio_30_9']
+            (True):
+                the_selected_title.append(t)
+        
+        
+        
+        for t in day6cid3_title:
+            
+            if take_all or \
+            (False and \
+             'cnt' not in t and \
+             'day5' not in t and \
+             'day6' not in t and \
+             'cus1' in t
+             ):
+                the_selected_title.append(t)
+        
+        for t in d6c3_title:
+            
+            if take_all or \
+            (False and \
+             'day5' not in t and \
+             'day6' not in t and \
+             'cus1' in t
              ):
                 the_selected_title.append(t)
                 
@@ -858,11 +936,28 @@ for line in csv.reader(f):
     for i in range(len(the_mf6_cid_30_data)):
         if mf6_cid_30_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf6_cid_30_data[i]))
+    
+    the_mf6_cid_ratio_30_data = fid2mf6_cid_ratio_30[the_fid]
+    for i in range(len(the_mf6_cid_ratio_30_data)):
+        if mf6_cid_ratio_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf6_cid_ratio_30_data[i]))
             
     the_new_mf_cid_ratio_30_data = fid2new_mf_cid_ratio_30[the_fid]
     for i in range(len(the_new_mf_cid_ratio_30_data)):
         if new_mf_cid_ratio_30_title[i] in the_selected_title:
             the_selected_data.append(float(the_new_mf_cid_ratio_30_data[i]))
+    
+    
+    the_day6cid3_data = fid2day6cid3_data[the_fid]
+    for i in range(len(the_day6cid3_data)):
+        if day6cid3_title[i] in the_selected_title:
+            the_selected_data.append(float(the_day6cid3_data[i]))
+    
+    
+    the_d6c3_data = fid2d6c3_data[the_fid]
+    for i in range(len(the_d6c3_data)):
+        if d6c3_title[i] in the_selected_title:
+            the_selected_data.append(float(the_d6c3_data[i]))
             
 #    the_selected_data.append(fid2cp_ratio[the_fid])
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -1021,7 +1116,7 @@ for i in range(clf_num):
 #            'min_child_weight': int(1 + 3 * np.random.random()),
 #            'scale_pos_weight': 9,
             'learning_rate': 0.05,
-            'n_jobs': 4
+            'n_jobs': n_jobs
             }
     
     xgb = XGBClassifier(**param)
@@ -1242,7 +1337,7 @@ clf_params = the_best_params[:int(best_ratio * clf_num)]
 ##            'min_child_weight': int(1 + 3 * np.random.random()),
 ##            'scale_pos_weight': 9,
 #            'learning_rate': 0.05,
-#            'n_jobs': 4
+#            'n_jobs': n_jobs
 #            }
 #    
 #    xgb = XGBClassifier(**param)
@@ -1319,23 +1414,30 @@ for test_pred in test_preds:
 ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
 
 
-#ensemble_test_pred = np.vstack(test_preds).mean(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-
-
-#ensemble_test_pred = np.vstack(test_preds).max(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-#
-#
-#ensemble_test_pred = np.vstack(test_preds).min(axis=0)
-#ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
-    
 
 submit = []
 for i in range(len(ensemble_test_pred)):
     submit.append([fid_test[i], ensemble_test_pred[i]])
 
-f = open('submit.csv', 'w')
+f = open('submit-geo.csv', 'w')
+w = csv.writer(f)
+w.writerows(submit)
+f.close()
+
+print('Time Taken:', time.time()-stime)
+
+
+
+ensemble_test_pred = None
+ensemble_test_pred = np.vstack(test_preds).mean(axis=0)
+ensemble_test_pred = ensemble_test_pred/np.max(ensemble_test_pred)
+
+
+submit = []
+for i in range(len(ensemble_test_pred)):
+    submit.append([fid_test[i], ensemble_test_pred[i]])
+
+f = open('submit-arith.csv', 'w')
 w = csv.writer(f)
 w.writerows(submit)
 f.close()
