@@ -17,39 +17,62 @@ from sklearn import svm
 from sklearn.metrics import confusion_matrix
 import math
 
-def sigmoid(x):
-  return 1 / (1 + math.exp(-x))
-
 stime = time.time()
 
 np.random.seed(4646)
 eps = 10 ** -8
-best_ratio = 0.5
-clf_num = 15
+best_ratio = 0.3
+clf_num = 22
 estimators_num = 600
 count_thresh = 0
+
 
 fid2stk_NN1 = {}
 count = 0
 f = open('stacking_NN_1.csv')
 for line in csv.reader(f):
-    count += 1
-    if count == 1:
-        continue
-    fid2stk_NN1[line[1]] = float(line[2])
+    fid2stk_NN1[line[0]] = float(line[1])
 f.close()
-
 
 fid2stk_NN2 = {}
 count = 0
 f = open('stacking_NN_2.csv')
 for line in csv.reader(f):
+    fid2stk_NN2[line[0]] = float(line[1])
+f.close()
+
+
+
+fid2stk_rf1 = {}
+count = 0
+f = open('stacking_RF_1.csv')
+for line in csv.reader(f):
     count += 1
     if count == 1:
         continue
-    fid2stk_NN2[line[1]] = float(line[2])
+    fid2stk_rf1[line[0]] = float(line[1])
 f.close()
 
+
+fid2stk_ext1 = {}
+count = 0
+f = open('stacking_EXT_1.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2stk_ext1[line[0]] = float(line[1])
+f.close()
+
+fid2stk_xgb1 = {}
+count = 0
+f = open('stacking_XGB_1.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2stk_xgb1[line[0]] = float(line[1])
+f.close()
 
 
 fid2cp_ratio = {}
@@ -296,6 +319,35 @@ f.close()
 
 
 
+mf6_cid_30_title = []
+for i in range(1,31):
+    mf6_cid_30_title.append('mf6_cid_30_' + str(i))
+    
+fid2mf6_cid_30 = {}
+count = 0
+f = open('frank_mf_6plus.cnt.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2mf6_cid_30[line[0]] = [float(x) for x in line[1:]]
+f.close()
+
+
+
+new_mf_cid_ratio_30_title = []
+for i in range(1,31):
+    new_mf_cid_ratio_30_title.append('new_mf_cid_ratio_30_' + str(i))
+
+fid2new_mf_cid_ratio_30 = {}
+count = 0
+f = open('frank_MF_cid_ratio_new_30.csv')
+for line in csv.reader(f):
+    count += 1
+    if count == 1:
+        continue
+    fid2new_mf_cid_ratio_30[line[0]] = [float(x) for x in line[1:]]
+f.close()
 
 
 
@@ -572,7 +624,7 @@ for line in csv.reader(f):
             (True and \
             t not in ['mf_cid_30_10','mf_cid_30_11','mf_cid_30_12','mf_cid_30_13','mf_cid_30_15', \
                       'mf_cid_30_18','mf_cid_30_19','mf_cid_30_20','mf_cid_30_23','mf_cid_30_24', \
-                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6']
+                      'mf_cid_30_25','mf_cid_30_29','mf_cid_30_6','mf_cid_30_28','mf_cid_30_9']
             ):
                 the_selected_title.append(t)
                 
@@ -611,7 +663,8 @@ for line in csv.reader(f):
         for t in mf_cid_ratio_30_title:
             
             if take_all or \
-            (True):
+            (True and \
+             t not in ['mf_cid_ratio_30_10']):
                 the_selected_title.append(t)
         
         
@@ -636,8 +689,24 @@ for line in csv.reader(f):
             if take_all or \
             (True):
                 the_selected_title.append(t)
-        
                 
+        
+        for t in mf6_cid_30_title:
+            
+            if take_all or \
+            (False and \
+            t not in ['mf6_cid_30_14','mf6_cid_30_2','mf6_cid_30_23','mf6_cid_30_26','mf6_cid_30_4']
+            ):
+                the_selected_title.append(t)
+                
+                
+        for t in new_mf_cid_ratio_30_title:
+            
+            if take_all or \
+            (True and \
+             t not in ['new_mf_cid_ratio_30_5','new_mf_cid_ratio_30_9']
+             ):
+                the_selected_title.append(t)
                 
         
 #        the_selected_title.append('cp_ratio')
@@ -651,8 +720,11 @@ for line in csv.reader(f):
 #        the_selected_title.append('new_cid_infec_ratio')
         
         
-#        the_selected_title.append('stk_NN_1')
-#        the_selected_title.append('stk_NN_2')
+#        the_selected_title.append('stk_NN1')
+#        the_selected_title.append('stk_NN2')
+#        the_selected_title.append('stk_rf1')
+#        the_selected_title.append('stk_ext1')
+#        the_selected_title.append('stk_xgb1')
         
         
         print(the_selected_title)
@@ -780,6 +852,17 @@ for line in csv.reader(f):
     for i in range(len(the_mf_pid_ratio_10_data)):
         if mf_pid_ratio_10_title[i] in the_selected_title:
             the_selected_data.append(float(the_mf_pid_ratio_10_data[i]))
+    
+    
+    the_mf6_cid_30_data = fid2mf6_cid_30[the_fid]
+    for i in range(len(the_mf6_cid_30_data)):
+        if mf6_cid_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_mf6_cid_30_data[i]))
+            
+    the_new_mf_cid_ratio_30_data = fid2new_mf_cid_ratio_30[the_fid]
+    for i in range(len(the_new_mf_cid_ratio_30_data)):
+        if new_mf_cid_ratio_30_title[i] in the_selected_title:
+            the_selected_data.append(float(the_new_mf_cid_ratio_30_data[i]))
             
 #    the_selected_data.append(fid2cp_ratio[the_fid])
     the_selected_data.append(fid2h_infec_ratio[the_fid])
@@ -793,13 +876,11 @@ for line in csv.reader(f):
 #    the_selected_data.append(fid2new_cid_infec_ratio[the_fid])
     
     
-#    try:
-#        the_selected_data.append(fid2stk_NN1[the_fid])
-#        the_selected_data.append(fid2stk_NN2[the_fid])
-#    except:
-#        the_selected_data.append(0)
-#        the_selected_data.append(0)
-    
+#    the_selected_data.append(fid2stk_NN1[the_fid])
+#    the_selected_data.append(fid2stk_NN2[the_fid])
+#    the_selected_data.append(fid2stk_rf1[the_fid])
+#    the_selected_data.append(fid2stk_ext1[the_fid])
+#    the_selected_data.append(fid2stk_xgb1[the_fid])
     
     if line[-1] == 'train' and count_thresh_check:
         
@@ -948,6 +1029,17 @@ for i in range(clf_num):
     clfs.append(xgb)
     clf_names.append('XGB' + str(i+1))
     clf_params.append(param)
+    
+    
+#    param = {
+#            'n_estimators': estimators_num
+#            }
+#    
+#    rf = RandomForestClassifier(**param)
+#    
+#    clfs.append(rf)
+#    clf_names.append('RF' + str(i+1))
+#    clf_params.append(param)
 
 
 print('Model Training...')
