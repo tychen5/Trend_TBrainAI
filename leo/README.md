@@ -1,5 +1,8 @@
 # Leo #
-hello there~
+台大資管所 ANTS lab (Prof. Yeali S. Sun)
+r06725035@g.ntu.edu.tw
+
+# Work Allocation & Approach
 
 * csv/duration_discreteRate.csv => 已經完成各fid的最初發現時間與最終發現時間的差計算，也完成離散率的平均計算。
 
@@ -28,13 +31,12 @@ hello there~
 * csv/MF_cid_ratio_30.csv => cid 30 ratio
 
 ## Intro of Me ##
-- 孫媽lab
+- skilled in malware analysis, deep learning / machine learning
 
 ## Background of Me ##
 - 網路資安lab: malware analysis、5G IoT technology
-- know a little of DL
-- new to ML
+- malware behavior analysis
 
 
-## Doing ##
+## Ongoing ##
 - DNN + softmax -> binary classification / regression
